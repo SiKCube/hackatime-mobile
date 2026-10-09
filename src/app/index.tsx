@@ -1,11 +1,14 @@
-import Auth from "@/components/auth";
-import { Text, View, StyleSheet } from "react-native";
+import AuthLogger from "@/features/auth-ctx/auth-logger";
+import LoginBtn from "@/features/auth-screen/loginBtn";
+import { StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
   return (
-    <View style={styles.container}>
-      <Auth />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <LoginBtn />
+      <AuthLogger />
+    </SafeAreaView>
   );
 }
 
