@@ -1,3 +1,4 @@
+import ProjectsChart from "@/features/projects-durations/projects-chart";
 import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -5,6 +6,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView>
       <Text>Home</Text>
+      <ProjectsChart />
     </SafeAreaView>
   )
 }
