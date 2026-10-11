@@ -3,6 +3,7 @@ import { makeRedirectUri, ResponseType, revokeAsync, useAuthRequest } from "expo
 import { createContext, useContext, useEffect, useState } from "react";
 import { getStoredData, killAllStoredData, storeData } from "../storage";
 import { getSecure, killSecures, saveSecure } from "./secure-save";
+import { router } from "expo-router"
 
 interface AuthContextType {
   userToken: string | null,
@@ -150,6 +151,7 @@ export default function AuthContextProvider({ children }: { children: React.Reac
           setUser(parseUserMetadata)
           setUserApiKey(storedUserApikey)
           setUserToken(storedUserToken)
+          router.replace("/in-app")
         } else {
           await killSecures()
           await killAllStoredData()
@@ -192,6 +194,7 @@ export default function AuthContextProvider({ children }: { children: React.Reac
         setUser(usermetadata)
 
         setLoading(false)
+        router.replace("/in-app")
       } catch (e) {
         setLoading(false)
         setError(`Error when handling auth: ${e}`)

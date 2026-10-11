@@ -5,6 +5,8 @@ import { SECURE_KEYS_TYPE, TESTING } from "../../../consts"
 
 export default function AuthLogger() {
   const { userApikey, userToken, user, error, loading } = useAuthCtx()
+  const islogin = (user && userApikey && userToken) ? true : false
+
   
   const getget = async (securekey: SECURE_KEYS_TYPE) => {
     const r = await getSecure(securekey)
@@ -43,6 +45,7 @@ export default function AuthLogger() {
       <Text>
         Loading: {loading}
         Error: {error}
+        Autenticated?: {String(islogin)}
       </Text>
     </View>
   )

@@ -1,3 +1,4 @@
+import { Link } from "expo-router"
 import { Button, Text, View } from "react-native"
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider"
 
@@ -11,11 +12,16 @@ export default function LoginBtn() {
       </Text>
       {
         userApikey && userToken ?
-          <Button
-            title="Logout"
-            onPress={logout}
-            disabled={loading}
-          />
+          <>
+            <Link href={"/in-app"}>
+              Enter
+            </Link>
+            <Button
+              title="Logout"
+              onPress={logout}
+              disabled={loading}
+            />
+          </>
           :
           <Button
             title="Login"
