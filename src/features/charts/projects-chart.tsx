@@ -8,7 +8,8 @@ type ChartDataType = ChartBarType[]
 
 interface ChartBarType {
   project: string,
-  hours: number
+  hours: number,
+  hours_label: string
 }
 
 export default function ProjectsChart() {
@@ -35,7 +36,8 @@ export default function ProjectsChart() {
         const parsedData: ChartDataType = data.projects.map((prj): ChartBarType => {
           return {
             project: prj.name,
-            hours: prj.hours
+            hours: Number((prj.total_seconds / 3600).toFixed(2)),
+            hours_label: prj.text
           }
         })
 
@@ -65,10 +67,13 @@ export default function ProjectsChart() {
               data={chartData as any}
               xKey="project"
               yKey="hours"
+              accessibilityLabel="hours_label"
+              formatYLabel={(val) => `${chartData.find((data) => data.hours === val)?.hours_label}`}
+              showXAxisLabels={false}
               orientation="horizontal"
               showValuesOnTopOfBars
-              width={410}
-              height={260}
+              width={350}
+              height={460}
             />
           :
           <Text>{error}</Text>

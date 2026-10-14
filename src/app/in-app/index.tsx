@@ -1,12 +1,37 @@
-import ProjectsChart from "@/features/projects-durations/projects-chart";
-import { Text } from "react-native";
+import CodingTimeTodayChart from "@/features/charts/coding-t-today";
+import IaVsHumanChart from "@/features/charts/ia-human";
+import LenguajesPie from "@/features/charts/lenguajes-pie";
+import ProjectsTimeline from "@/features/charts/projects-timeline";
+import RhythmChart from "@/features/charts/rhythm";
+import ProjectsChart from "@/features/charts/projects-chart";
+import { ScrollView, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   return (
     <SafeAreaView>
-      <Text>Home</Text>
-      <ProjectsChart />
+      <ScrollView>
+        <Text>Home</Text>
+        <ProjectsChart />
+        <LenguajesPie
+          limit={10}
+          categories={[]}
+          projects={[]}
+        />
+        <ProjectsTimeline
+          projects={[]}
+          interval_days={6}
+          start_date="2026-01-01"
+          end_date="2026-10-14"
+        />
+        {/* <RhythmChart /> */}
+        <CodingTimeTodayChart
+          projects={[]}
+          start_date="2026-01-01"
+          end_date="2026-10-14"
+        />
+        <IaVsHumanChart />
+      </ScrollView>
     </SafeAreaView>
   )
 }
