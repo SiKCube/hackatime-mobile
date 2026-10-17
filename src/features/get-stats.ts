@@ -3,16 +3,15 @@ import axios from "axios"
 interface UserStatsParams {
   start_date?: string,
   end_date?: string,
-  limit: number,
+  limit?: number,
   features: string[],
   filter_by_project: string[],
   filter_by_category: string[],
   total_seconds?: boolean,
   no_ia?: boolean,
-
 }
 
-interface StatsRequest {
+export interface StatsRequest {
   data: Data;
   trust_factor: TrustFactor;
 }
@@ -69,7 +68,7 @@ export async function getStats(username: string, apikey: string, params: UserSta
     params: {
       start_date: params.start_date ? params.start_date : "",
       end_date: params.end_date ? params.end_date : "",
-      limit: params.limit,
+      limit: params.limit ? params.limit : "",
       features: params.features.join(","),
       filter_by_project: params.filter_by_project.join(","),
       filter_by_category: params.filter_by_category.join(","),
