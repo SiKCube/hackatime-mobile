@@ -34,3 +34,9 @@ I broke my brain in this one, this is just a context that serves the data, parse
 **(Sept 17 2026)**
 
 I played with arrays, works like the chart in the original dashboard, but there is a bit differences (some hours doesn't appear) I think that is the API, but at least the same shape appears :) and looks sick.
+
+## Logo added to README
+**(Oct 17 2026)**
+
+I edited the original Hackatime logo in school using IbsPaint. There isn't any copyright, right?
+
