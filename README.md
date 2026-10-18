@@ -1,4 +1,4 @@
-![Hackatime-mobile-logo](assets\hackatime-mobile.png)
+![Hackatime-mobile-logo](./assets/hackatime-mobile.png)
 
 # Welcome to Hackatime mobile
 
