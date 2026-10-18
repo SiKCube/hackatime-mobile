@@ -90,3 +90,10 @@ export async function getStats(username: string, apikey: string, params: UserSta
 
   return data
 }
+
+export const gethoursAndMinutes = (secs: number) => {
+  const hours = Math.floor(secs / 3600)
+  const minutes = Math.floor((secs - (hours * 3600)) / 60)
+
+  return `${hours}h ${minutes}m`
+}

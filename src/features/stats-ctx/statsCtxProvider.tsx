@@ -197,4 +197,4 @@ export default function StatsCtxProvider({ children }: { children: React.ReactNo
   )
 }
 
-export const useChartCtx = () => useContext(StatsContext) 
+export const useWeeklyStats = () => useContext(StatsContext) 

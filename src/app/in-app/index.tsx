@@ -35,8 +35,8 @@ export default function HomeScreen() {
         />
         <CodingTimeTodayChart
           projects={[]}
-          start_date="2026-01-01"
-          end_date="2026-10-14"
+          start_date="2026-10-11"
+          end_date="2026-10-18"
         />
         <IaVsHumanChart />
       </ScrollView>

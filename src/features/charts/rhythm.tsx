@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import Svg, { Rect } from "react-native-svg";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
+import { gethoursAndMinutes } from "../get-stats";
 
 export interface SpansRequest {
   spans: Span[];
@@ -29,13 +30,6 @@ const WEEK_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 const TIMES = ["12AM", "3AM", "6AM", "9AM", "12PM", "3PM", "6PM", "9PM", "_"]
 const CELL_SIZE = 20
 const GAP = 5
-
-const gethoursAndMinutes = (secs: number) => {
-  const hours = Math.floor(secs / 3600)
-  const minutes = Math.floor((secs - (hours * 3600)) / 60)
-
-  return `${hours}h ${minutes}m`
-}
 
 export default function RhythmChart({ start_date, end_date, projects }: Props) {
   const [chartData, setChartData] = useState<ChartData[] | null>(null)
