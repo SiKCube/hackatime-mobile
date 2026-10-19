@@ -18,9 +18,6 @@ export default function HomeScreen() {
       <ScrollView>
         <Text>Home</Text>
         <ProjectsChart />
-        <Link href={"/in-app/projects"} push asChild>
-          <Button title="View projects" />
-        </Link>
         <LenguajesPie
           limit={10}
           categories={[]}
