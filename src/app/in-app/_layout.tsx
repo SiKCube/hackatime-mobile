@@ -11,13 +11,23 @@ export default function AppTabLayout() {
         }}
       >
         <Tabs.Screen
-          name="(home)"
+          name="index"
           options={{
             title: "Home",
             tabBarIcon: ({ focused, color }) => focused ?
               <Ionicons name="home" size={24} color={color} />
               :
               <Ionicons name="home-outline" size={24} color={color} />
+          }}
+        />
+        <Tabs.Screen
+          name="projects"
+          options={{
+            title: "Projects",
+            tabBarIcon: ({ focused, color }) => focused ?
+              <Ionicons name="list-circle" size={24} color={color} />
+              :
+              <Ionicons name="list-circle-outline" size={24} color={color} />
           }}
         />
         <Tabs.Screen

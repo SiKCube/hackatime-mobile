@@ -5,7 +5,6 @@ export default function ProjectsLayout() {
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="projects/[projectId]" options={{ headerTitle: "Details" }} />
-      <Stack.Screen name="projects/index" options={{ headerTitle: "Projects" }} />
     </Stack>
   )
 }
