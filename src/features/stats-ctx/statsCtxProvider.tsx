@@ -2,6 +2,7 @@ import { useNetworkState } from "expo-network";
 import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
 import { getStats, StatsRequest } from "../get-stats";
+import axios from "axios";
 
 interface Projects {
   name: string;
@@ -24,7 +25,7 @@ interface Languages {
   color: string;
 }
 
-interface Stat {
+export interface Stat {
   start_date: string
   end_date: string
   total_seconds: number
@@ -35,7 +36,7 @@ interface Stat {
   languages: Languages[]
 }
 
-interface StatWithWeekNum extends Stat {
+export interface StatWithWeekNum extends Stat {
   weekNumber: number
 }
 
@@ -43,6 +44,7 @@ interface StatsContextType {
   weeklyStats: StatWithWeekNum[] | null
   todayWeekStats: StatWithWeekNum | null
   totalYearStats: Stat | null
+  projectsNames: string[] | null 
   loading: boolean
   error: string | null
   selectedYear: number
@@ -52,6 +54,7 @@ interface StatsContextType {
 const StatsContext = createContext<StatsContextType>({
   error: null,
   loading: false,
+  projectsNames: null,
   weeklyStats: null,
   todayWeekStats: null,
   totalYearStats: null,
@@ -83,12 +86,33 @@ const getFirstDateOfTheWeekByISOString = (isoString: string, firstDayofTheWeek: 
   return date
 }
 
+const getProjectsNames = async (username: string, apikey: string, start_date: string, end_date: string) => {
+  const { data } = await axios.request({
+    method: "GET",
+    url: `https://hackatime.hackclub.com/api/v1/users/${username}/projects`,
+    headers: {
+      Authorization: `Bearer ${apikey}`
+    },
+    params: {
+      start_date,
+      end_date
+    }
+  })
+
+  const prjList: string[] | undefined = data.projects
+
+  if (!prjList) throw Error("Projects list is undefined")
+
+  return prjList
+}
+
 export default function StatsCtxProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | null>(null)
   const [loading, setloading] = useState<boolean>(false)
   const [weeklyStats, setweeklyStats] = useState<StatWithWeekNum[] | null>(null)
   const [todayWeekStats, settodayWeekStats] = useState<StatWithWeekNum | null>(null)
   const [totalYearStats, setTodalYearStats] = useState<Stat | null>(null)
+  const [projectsNames, setProjectNames] = useState<string[] | null>(null)
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear())
 
   const { user, userApikey } = useAuthCtx()
@@ -164,6 +188,9 @@ export default function StatsCtxProvider({ children }: { children: React.ReactNo
         projects: fetchedTotalYearStats.data.projects ?? []
       }
 
+      const prjlist = await getProjectsNames(username, apikey, firstDateOfTheYearDate.toISOString().slice(0, 10), lastDateOfTheYearDate.toISOString().slice(0, 10))
+
+      setProjectNames(prjlist)
       setTodalYearStats(parsedTotalYearStats)
       settodayWeekStats(todayWeekStats ? todayWeekStats : null)
       setweeklyStats(yearStatsPerWeek)
@@ -190,6 +217,7 @@ export default function StatsCtxProvider({ children }: { children: React.ReactNo
     <StatsContext.Provider value={{
       weeklyStats, todayWeekStats, totalYearStats,
       loading, error,
+      projectsNames,
       selectedYear, setSelectedYear
     }}>
       {children}
