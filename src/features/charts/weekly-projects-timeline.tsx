@@ -51,7 +51,16 @@ export default function WeeklyProjectsTimeline() {
               width={350}
               scrollable
               visiblePoints={8}
-              renderBar={({ bar, fill, radius }) => (
+              interaction={{
+                mode: "tap",
+                deselectOnOutsidePress: true,
+              }}
+              tooltip={{
+                anchor: "pointer",
+                placement: "above",
+                width: 200
+              }}
+              renderBar={({ bar, fill }) => (
                 <Rect
                   x={bar.x}
                   y={bar.y}
