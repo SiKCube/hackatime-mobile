@@ -3,10 +3,11 @@ import IaVsHumanChart from "@/features/charts/ia-human";
 import LenguajesPie from "@/features/charts/lenguajes-pie";
 import RhythmChart from "@/features/charts/rhythm";
 import ProjectsChart from "@/features/charts/projects-chart";
-import { ScrollView, Text } from "react-native";
+import { Button, ScrollView, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import WeeklyProjectsTimeline from "@/features/charts/weekly-projects-timeline";
+import { Link } from "expo-router";
 
 export default function HomeScreen() {
   const [selectedStartDate, setSelectedStartDate] = useState<Date>(new Date())
@@ -17,6 +18,9 @@ export default function HomeScreen() {
       <ScrollView>
         <Text>Home</Text>
         <ProjectsChart />
+        <Link href={"/in-app/projects"} push asChild>
+          <Button title="View projects" />
+        </Link>
         <LenguajesPie
           limit={10}
           categories={[]}

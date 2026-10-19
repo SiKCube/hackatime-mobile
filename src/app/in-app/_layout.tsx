@@ -7,12 +7,11 @@ export default function AppTabLayout() {
     <StatsCtxProvider>
       <Tabs
         screenOptions={{
-          headerShown: false
-        }
-        }
+          headerShown: false,
+        }}
       >
         <Tabs.Screen
-          name="index"
+          name="(home)"
           options={{
             title: "Home",
             tabBarIcon: ({ focused, color }) => focused ?
