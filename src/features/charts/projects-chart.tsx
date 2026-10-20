@@ -1,15 +1,16 @@
+import StyledCard from "@/components/ui/card";
 import { useEffect, useState } from "react";
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { BarChart } from "react-native-chart-kit/v2";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
-import { getStats } from '../get-stats';
+import { gethoursAndMinutes, getStats } from '../get-stats';
+import StyledText from "@/components/ui/text";
 
 type ChartDataType = ChartBarType[]
 
 interface ChartBarType {
   project: string,
   hours: number,
-  hours_label: string
 }
 
 export default function ProjectsChart() {
@@ -32,12 +33,11 @@ export default function ProjectsChart() {
         })
 
         if (!data.projects) throw Error("Projects none")
-        
+
         const parsedData: ChartDataType = data.projects.map((prj): ChartBarType => {
           return {
             project: prj.name,
-            hours: Number((prj.total_seconds / 3600).toFixed(2)),
-            hours_label: prj.text
+            hours: prj.total_seconds,
           }
         })
 
@@ -57,27 +57,28 @@ export default function ProjectsChart() {
   }, [])
 
   return (
-    <>
-      {
-        chartData ?
-          loading ?
-            <Text>Loading...</Text>
+    <StyledCard>
+      <StyledText size={20} weight="bold">Project Durations</StyledText>
+      <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+        {
+          chartData ?
+            loading ?
+              <Text>Loading...</Text>
+              :
+              <BarChart
+                data={chartData as any}
+                xKey="project"
+                yKey="hours"
+                formatYLabel={(val) => gethoursAndMinutes(val, true)}
+                orientation="horizontal"
+                showValuesOnTopOfBars
+                width={260}
+                height={450}
+              />
             :
-            <BarChart
-              data={chartData as any}
-              xKey="project"
-              yKey="hours"
-              accessibilityLabel="hours_label"
-              formatYLabel={(val) => `${chartData.find((data) => data.hours === val)?.hours_label}`}
-              showXAxisLabels={false}
-              orientation="horizontal"
-              showValuesOnTopOfBars
-              width={350}
-              height={460}
-            />
-          :
-          <Text>{error}</Text>
-      }
-    </>
+            <Text>{error}</Text>
+        }
+      </View>
+    </StyledCard>
   )
 }

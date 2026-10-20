@@ -1,3 +1,5 @@
+import { createChartPreset } from "react-native-chart-kit/v2"
+
 export const THEME = {
   on_primary: "#13160d",
   input: "#050505",
@@ -26,3 +28,21 @@ export const THEME = {
   danger: "#ff4d6d",
 }
 
+export const neon = createChartPreset({
+  background: `${THEME.surface_100}4d`,
+  plotBackground: "#ffffff00",
+  grid: THEME.surface_300,
+  axis: THEME.on_primary,
+  series: [THEME.primary, THEME.orange, THEME.blue, THEME.cyan, THEME.blue, THEME.green, THEME.purple, THEME.yellow],
+  text: THEME.surface_content,
+  tooltip: {
+    background: THEME.surface_100,
+    border: THEME.secondary,
+    text: THEME.surface_content,
+  },
+  mutedText: THEME.secondary,
+  typography: {
+    legendLabelSize: 10,
+    axisLabelSize: 10
+  }
+})

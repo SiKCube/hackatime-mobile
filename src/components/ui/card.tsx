@@ -11,7 +11,7 @@ export default function StyledCard({ children, important, width }: Props) {
   return (
     <View style={{
       ...CardStyle.card,
-      backgroundColor: important ? `${THEME.primary}1a` : `${THEME.surface_100}4d`,
+      backgroundColor: important ? `${THEME.primary}1a` : `${THEME.surface}`,
       borderColor: important ? THEME.primary : THEME.surface_200,
       width: width
     }}>

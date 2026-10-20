@@ -1,3 +1,6 @@
+import { THEME } from "@/components/theme";
+import StyledCard from "@/components/ui/card";
+import StyledText from "@/components/ui/text";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { ProgressRing } from "react-native-chart-kit/v2";
@@ -81,34 +84,41 @@ export default function CodingTimeTodayChart({ start_date, end_date, projects, n
   }, [])
 
   return (
-    <>
+    <StyledCard>
+      <StyledText weight="bold" size={20}>Coding Time Today</StyledText>
+      <StyledText type="seconday" size={15}>Compared with your last eight days</StyledText>
       <Text>{error}</Text>
       {
         loading ?
           <Text>Loading...</Text>
           :
           chartData ?
-            <View>
-              <ProgressRing
-                height={150}
-                width={150}
-                value={chartData.score}
-                centerLabel={() => `${Math.floor(chartData.score * 100)}%`}
-              />
-              {
-                Math.floor(chartData.score * 100) ?
-                  <Text style={{ color: "red", fontWeight: "bold" }}>
-                    {100 - Math.floor(chartData.score * 100)}% below usual daily total
-                  </Text>
-                  :
-                  null
-              }
-              <Text>Today {gethoursAndMinutes(chartData.today)}</Text>
-              <Text>Usual {gethoursAndMinutes(chartData.promedio)}</Text>
+            <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 10 }}>
+              <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", }}>
+                <ProgressRing
+                  height={170}
+                  width={170}
+                  value={chartData.score}
+                  centerLabel={() => `${Math.floor(chartData.score * 100)}%`}
+                />
+                {
+                  Math.floor(chartData.score * 100) ?
+                    <Text style={{ color: THEME.danger, fontWeight: "bold" }}>
+                      {100 - Math.floor(chartData.score * 100)}% below usual daily total
+                    </Text>
+                    :
+                    null
+                }
+              </View>
+              <View style={{ flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center" }}>
+                <StyledText type="seconday" size={17}>Today {gethoursAndMinutes(chartData.today)}</StyledText>
+                <View style={{ width: 4, height: 4, backgroundColor: THEME.secondary, borderRadius: 100 }} />
+                <StyledText type="seconday" size={15}>Usual {gethoursAndMinutes(chartData.promedio)}</StyledText>
+              </View>
             </View>
             :
             <Text>No data</Text>
       }
-    </>
+    </StyledCard>
   )
 }

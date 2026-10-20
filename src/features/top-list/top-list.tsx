@@ -10,21 +10,19 @@ interface Props {
 
 export default function TopList({ total_time_secs, top_language, top_project }: Props) {
   return (
-    <View style={{ flexDirection: "column", gap: 10, justifyContent: "center", alignItems: "center" }}>
+    <View style={{ flexDirection: "column", gap: 20 }}>
       <TopCard
         title="Total time"
         value={gethoursAndMinutes(total_time_secs)}
       />
-      <View style={{ flexDirection: "row", gap: 10, justifyContent: "space-between", alignItems: "center" }}>
-        <TopCard
-          title="Top language"
-          value={top_language}
-        />
-        <TopCard
-          title="Top project"
-          value={top_project}
-        />
-      </View>
+      <TopCard
+        title="Top language"
+        value={top_language}
+      />
+      <TopCard
+        title="Top project"
+        value={top_project}
+      />
     </View>
   )
 }

@@ -1,4 +1,4 @@
-import { THEME } from "@/components/theme";
+import { neon, THEME } from "@/components/theme";
 import StatsCtxProvider from "@/features/stats-ctx/statsCtxProvider";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
@@ -6,8 +6,7 @@ import { ChartKitProvider } from "react-native-chart-kit/v2";
 
 export default function AppTabLayout() {
   return (
-    <ChartKitProvider>
-
+    <ChartKitProvider preset={"neon"} mode="dark" presets={{ neon }}>
       <StatsCtxProvider>
         <Tabs
           screenOptions={{

@@ -1,5 +1,7 @@
+import StyledCard from "@/components/ui/card";
+import StyledText from "@/components/ui/text";
 import { useEffect, useState } from "react";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import { PieChart } from "react-native-chart-kit/v2";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
 import { getStats } from "../get-stats";
@@ -59,28 +61,31 @@ export default function LenguajesPie({ categories, projects, limit }: Props) {
   }, [])
 
   return (
-    <>
+    <StyledCard>
+      <StyledText weight="bold" size={20}>Languages</StyledText>
       <Text>{error}</Text>
-      {
-        loading ?
-          <Text>loading...</Text>
-          :
-          chartData ?
-            <PieChart
-              data={chartData as any}
-              height={300}
-              width={250}
-              valueKey={"time"}
-              labelKey={"leng"}
-              colorKey="color"
-              interaction={{
-                mode: "tap",
-                deselectOnOutsidePress: true,
-              }}
-            />
+      <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+        {
+          loading ?
+            <Text>loading...</Text>
             :
-            <Text>no data</Text>
-      }
-    </>
+            chartData ?
+              <PieChart
+                data={chartData as any}
+                height={300}
+                width={250}
+                valueKey={"time"}
+                labelKey={"leng"}
+                colorKey="color"
+                interaction={{
+                  mode: "tap",
+                  deselectOnOutsidePress: true,
+                }}
+              />
+              :
+              <Text>no data</Text>
+        }
+      </View>
+    </StyledCard>
   )
 }

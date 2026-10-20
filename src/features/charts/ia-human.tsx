@@ -1,10 +1,19 @@
+import { THEME } from "@/components/theme";
+import StyledCard from "@/components/ui/card";
+import StyledText from "@/components/ui/text";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
+import { gethoursAndMinutes } from "../get-stats";
 
 export interface MainRequest {
   total_seconds: number
+}
+
+interface BarData {
+  texttime: string
+  porcentage: number
 }
 
 const getTotalSecs = async (username: string, apikey: string, noia: boolean): Promise<number> => {
@@ -35,7 +44,7 @@ export default function IaVsHumanChart() {
 
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
-  const [chartData, setChartData] = useState<[number, number] | null>(null)
+  const [chartData, setChartData] = useState<[BarData, BarData] | null>(null)
 
 
   useEffect(() => {
@@ -50,7 +59,16 @@ export default function IaVsHumanChart() {
         const iaCodingSecs = total - totalNotAI
 
 
-        setChartData([get100porcent(totalNotAI, total), get100porcent(iaCodingSecs, total)])
+        setChartData([
+          {
+            texttime: gethoursAndMinutes(totalNotAI),
+            porcentage: get100porcent(totalNotAI, total)
+          },
+          {
+            texttime: gethoursAndMinutes(iaCodingSecs),
+            porcentage: get100porcent(iaCodingSecs, total)
+          }
+        ])
         setLoading(false)
       } catch (e) {
         setError(`${e}`)
@@ -64,7 +82,10 @@ export default function IaVsHumanChart() {
   }, [])
 
   return (
-    <>
+    <StyledCard>
+      <StyledText weight="bold" size={20}>AI vs Human Coding</StyledText>
+      <StyledText type="seconday" size={15}>Better by hand?</StyledText>
+      
       <Text>{error}</Text>
       {
         loading ?
@@ -72,18 +93,32 @@ export default function IaVsHumanChart() {
           :
           chartData ?
             <View>
-              <View style={{ width: "100%", height: 30, flexDirection: "row", borderRadius: 100 }}>
-                <View style={{ width: `${chartData[1]}%`, height: 30, backgroundColor: "red" }} />
-                <View style={{ width: `${chartData[0]}%`, height: 30, backgroundColor: "green" }} />
+              <View style={{ width: "100%", height: 20, flexDirection: "row" }}>
+                <View style={{ width: `${chartData[1].porcentage}%`, height: 20, backgroundColor: THEME.primary, borderTopStartRadius: 100, borderBottomStartRadius: 100 }} />
+                <View style={{ width: `${chartData[0].porcentage}%`, height: 20, backgroundColor: THEME.blue, borderTopEndRadius: 100, borderBottomEndRadius: 100 }} />
               </View>
               <View style={{ flexDirection: "row", justifyContent: "space-between", padding: 10 }} >
-                <Text>IA coding: {chartData[1]}%</Text>
-                <Text>Human coding: {chartData[0]}%</Text>
+                <View style={{ flexDirection: "column", justifyContent: "flex-start" }}>
+                  <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 10 }}>
+                    <View style={{ width: 10, height: 10, backgroundColor: THEME.primary, borderRadius: 100 }} />
+                    <StyledText size={13} type="seconday">IA coding</StyledText>
+                  </View>
+                  <StyledText weight="bold" size={20}>{chartData[1].porcentage}%</StyledText>
+                  <StyledText size={13} type="seconday">{chartData[1].texttime}</StyledText>
+                </View>
+                <View>
+                  <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 10 }}>
+                    <StyledText size={13} type="seconday">Human coding</StyledText>
+                    <View style={{ width: 10, height: 10, backgroundColor: THEME.blue, borderRadius: 100 }} />
+                  </View>
+                  <StyledText weight="bold" size={20}>{chartData[0].porcentage}%</StyledText>
+                  <StyledText size={13} type="seconday">{chartData[0].texttime}</StyledText>
+                </View>
               </View>
             </View>
             :
             <Text>No data</Text>
       }
-    </>
+    </StyledCard>
   )
 }
