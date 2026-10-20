@@ -1,0 +1,35 @@
+import { Dispatch, useState } from "react";
+import { KeyboardTypeOptions, Text, TextInput, View } from "react-native";
+import StyledText from "./text";
+import { THEME } from "../theme";
+
+interface Props {
+  placeholder: string
+  change: string
+  setChange: Dispatch<string>
+  keyboardType: KeyboardTypeOptions
+}
+
+export default function StyledInput({ keyboardType, placeholder, change, setChange }: Props) { 
+  return (
+    <View>
+      <TextInput
+        style={{
+          borderWidth: 1,
+          borderColor: THEME.surface_300,
+          backgroundColor: THEME.input,
+          borderRadius: 6,
+          paddingTop: 8,
+          paddingBottom: 8,
+          paddingLeft: 16,
+          paddingRight: 16,
+          color: THEME.surface_content,
+        }}
+        placeholder={placeholder}
+        value={change}
+        onChangeText={setChange}
+        keyboardType={keyboardType}
+      />
+    </View>
+  )
+}

@@ -1,3 +1,4 @@
+import { THEME } from "@/components/theme";
 import AuthContextProvider, { useAuthCtx } from "@/features/auth-ctx/auth-ctx-provider";
 import { SplashScreenController } from "@/features/auth-ctx/splash-screen-controler";
 import { Stack } from "expo-router";
@@ -18,7 +19,10 @@ function RootNavigator() {
   return (
     <Stack
       screenOptions={{
-        headerShown: false
+        headerShown: false,
+        contentStyle: {
+          backgroundColor: THEME.darker
+        }
       }}
     >
       <Stack.Protected guard={!islogin}>
