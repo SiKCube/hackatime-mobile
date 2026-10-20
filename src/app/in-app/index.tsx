@@ -8,6 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import WeeklyProjectsTimeline from "@/features/charts/weekly-projects-timeline";
 import { Link } from "expo-router";
+import TopList from "@/features/top-list/top-list";
 
 export default function HomeScreen() {
   const [selectedStartDate, setSelectedStartDate] = useState<Date>(new Date())
@@ -16,7 +17,12 @@ export default function HomeScreen() {
   return (
     <SafeAreaView>
       <ScrollView>
-        <Text>Home</Text>
+        <Text style={{ fontSize: 20, fontWeight: "bold" }}>Keep track of your coding time</Text>
+        <TopList
+          top_language="CSS"
+          top_project="PEPE"
+          total_time_secs={100000}
+        />
         <ProjectsChart />
         <LenguajesPie
           limit={10}

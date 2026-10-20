@@ -25,8 +25,8 @@ export default function ProjectCard({ name, archived, languages, total_seconds, 
           null
       }
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 3, width: 200 }}>
-        {languages.map((leng) =>
-          <Text style={{ fontSize: 10 }} >{leng}</Text>
+        {languages.map((leng, index) =>
+          <Text key={index} style={{ fontSize: 10 }} >{leng}</Text>
         )}
       </View>
       <View style={{ flexDirection: "row", gap: 5 }}>
