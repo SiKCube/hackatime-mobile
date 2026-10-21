@@ -1,6 +1,10 @@
+import { THEME } from "@/components/theme";
+import StyledButton from "@/components/ui/button";
+import StyledLinkButton from "@/components/ui/button-link";
+import StyledCard from "@/components/ui/card";
+import StyledText from "@/components/ui/text";
 import { Ionicons } from "@expo/vector-icons";
-import { Link } from "expo-router";
-import { Button, Linking, Text, View } from "react-native";
+import { Linking, View } from "react-native";
 import { gethoursAndMinutes } from "../get-stats";
 
 export interface Project {
@@ -9,14 +13,15 @@ export interface Project {
   languages: string[];
   repo_url: string | null;
   archived: boolean;
+  last_heartbeat: Date
 }
 
-export default function ProjectCard({ name, archived, languages, total_seconds, repo_url }: Project) {
+export default function ProjectCard({ name, archived, languages, total_seconds, repo_url, last_heartbeat }: Project) {
   return (
-    <View style={{ borderColor: "blue", borderWidth: 2, borderRadius: 10, padding: 20 }}>
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 5, flexWrap: "wrap" }}>
-        <Text style={{ fontSize: 20, fontWeight: "bold" }}>{name}</Text>
-        <Text style={{ fontSize: 20, fontWeight: "bold" }}>{gethoursAndMinutes(total_seconds)}</Text>
+    <StyledCard>
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 5, flexWrap: "wrap" }}>
+        <StyledText size={20} weight="bold">{name}</StyledText>
+        <StyledText size={20} weight="bold" type="primary">{gethoursAndMinutes(total_seconds)}</StyledText>
       </View>
       {
         archived ?
@@ -24,25 +29,41 @@ export default function ProjectCard({ name, archived, languages, total_seconds, 
           :
           null
       }
-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 3, width: 200 }}>
-        {languages.map((leng, index) =>
-          <Text key={index} style={{ fontSize: 10 }} >{leng}</Text>
-        )}
+      <View style={{ flexDirection: "row", justifyContent: "flex-start", gap: 3, alignItems: "center" }}>
+        <Ionicons name="time" size={20} color={THEME.primary} />
+        <StyledText size={13} type="seconday">
+          Last heartbeat:
+          <StyledText type="primary" size={13}> {gethoursAndMinutes((Date.now() - last_heartbeat.getTime()) / 1000)} </StyledText>
+          ago
+        </StyledText>
       </View>
-      <View style={{ flexDirection: "row", gap: 5 }}>
+      <StyledText size={13} type="seconday">
+        {languages.join(", ")}
+      </StyledText>
+      <View style={{ flexDirection: "row", gap: 5, justifyContent: "flex-end" }}>
         {
           repo_url ?
-            <Button onPress={() => Linking.openURL(repo_url)} title="View repo" />
+            <StyledButton
+              onClick={() => Linking.openURL(repo_url)}
+              type="secondary"
+            >
+              <Ionicons name="logo-github" size={20} />
+            </StyledButton>
             :
             null
         }
-        <Link href={{
-          pathname: "/in-app/projects/[projectId]",
-          params: { projectId: name }
-        }} >
-          Details
-        </Link>
+        <StyledLinkButton
+          type="primary"
+          href={{
+            pathname: "/in-app/projects/[projectId]",
+            params: {
+              projectId: name
+            }
+          }}
+        >
+          <Ionicons name="information-circle" size={20} />
+        </StyledLinkButton>
       </View>
-    </View>
+    </StyledCard>
   )
 }

@@ -14,6 +14,7 @@ export default function TopList({ total_time_secs, top_language, top_project }: 
       <TopCard
         title="Total time"
         value={gethoursAndMinutes(total_time_secs)}
+        important
       />
       <TopCard
         title="Top language"

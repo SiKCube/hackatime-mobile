@@ -1,6 +1,7 @@
+import StyledText from "@/components/ui/text";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { ScrollView, Text, TextInput, View,  } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
 import { gethoursAndMinutes } from "../get-stats";
 import ProjectCard, { Project } from "./project-card";
@@ -62,7 +63,8 @@ export default function ProjectsList() {
             archived: prj.archived,
             languages: prj.languages,
             repo_url: prj.repo_url,
-            total_seconds: prj.total_seconds
+            total_seconds: prj.total_seconds,
+            last_heartbeat: new Date(prj.last_heartbeat),
           }
         })
 
@@ -82,17 +84,17 @@ export default function ProjectsList() {
   return (
     <ScrollView contentContainerStyle={{ gap: 15, flexDirection: "column", margin: 15 }}>
       <View>
-        <Text style={{ fontSize: 25 }}>Projects</Text>
-        <Text>{error}</Text>
+        <StyledText size={20} weight="bold">Projects</StyledText>
+        <StyledText>{error}</StyledText>
         {/* <TextInput placeholder="Search" /> */}
       </View>
       {
         !loading && projectsList ?
-          <Text>
+          <StyledText>
             You've spent
-            <Text style={{ fontWeight: "bold" }}> {getSpentTime(projectsList)} </Text>
+            <StyledText weight="bold" type="primary"> {getSpentTime(projectsList)} </StyledText>
             coding across active projects
-          </Text>
+          </StyledText>
           :
           null
       }
@@ -110,6 +112,7 @@ export default function ProjectsList() {
                   languages={prj.languages}
                   repo_url={prj.repo_url}
                   total_seconds={prj.total_seconds}
+                  last_heartbeat={prj.last_heartbeat}
                 />
               )
             })
