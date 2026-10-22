@@ -1,5 +1,5 @@
 import { neon, THEME } from "@/components/theme";
-import StatsCtxProvider from "@/features/stats-ctx/statsCtxProvider";
+import StatsCtxProvider from "@/features/stats/context/statsCtxProvider";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { ChartKitProvider } from "react-native-chart-kit/v2";

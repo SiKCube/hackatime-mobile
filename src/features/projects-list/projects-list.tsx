@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
-import { gethoursAndMinutes } from "../get-stats";
+import { gethoursAndMinutes } from "../stats/get-stats";
 import ProjectCard, { Project } from "./project-card";
 
 interface ProjectsRequest {

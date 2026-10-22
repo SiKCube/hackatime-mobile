@@ -5,7 +5,7 @@ import StyledText from "@/components/ui/text";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { PieChart } from "react-native-chart-kit/v2";
-import { useWeeklyStats } from "../stats-ctx/statsCtxProvider";
+import { useStatsCtx } from "./context/statsCtxProvider";
 
 type LengChartData = {
   leng: string
@@ -16,11 +16,11 @@ type LengChartData = {
 export default function LenguajesPie() {
   const [chartData, setChartData] = useState<LengChartData | null>(null)
 
-  const { totalYearStats, loading, error } = useWeeklyStats()
+  const { totalStats, loading, error } = useStatsCtx()
 
   useEffect(() => {
-    if (totalYearStats?.languages) {
-      const r: LengChartData = totalYearStats.languages.map((leng) => {
+    if (totalStats?.languages) {
+      const r: LengChartData = totalStats.languages.map((leng) => {
         return {
           time: leng.total_seconds,
           color: leng.color,
@@ -30,7 +30,7 @@ export default function LenguajesPie() {
 
       setChartData(r)
     }
-  }, [totalYearStats])
+  }, [totalStats])
 
   return (
     <StyledCard>

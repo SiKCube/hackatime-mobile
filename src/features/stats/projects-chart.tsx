@@ -4,8 +4,8 @@ import StyledText from "@/components/ui/text";
 import { useEffect, useState } from "react";
 import { View } from 'react-native';
 import { BarChart } from "react-native-chart-kit/v2";
-import { gethoursAndMinutes } from '../get-stats';
-import { useWeeklyStats } from "../stats-ctx/statsCtxProvider";
+import { useStatsCtx } from "./context/statsCtxProvider";
+import { gethoursAndMinutes } from './get-stats';
 
 type ChartDataType = ChartBarType[]
 
@@ -16,11 +16,11 @@ interface ChartBarType {
 
 export default function ProjectsChart() {
   const [chartData, setChartData] = useState<ChartDataType | null>(null)
-  const { totalYearStats, loading } = useWeeklyStats()
+  const { totalStats, loading } = useStatsCtx()
 
   useEffect(() => {
-    if (totalYearStats?.projects) {
-      const r: ChartDataType = totalYearStats.projects.map((prj) => {
+    if (totalStats?.projects) {
+      const r: ChartDataType = totalStats.projects.map((prj) => {
         return {
           hours: prj.total_seconds,
           project: prj.name
@@ -29,7 +29,7 @@ export default function ProjectsChart() {
 
       setChartData(r)
     }
-  }, [totalYearStats])
+  }, [totalStats])
 
   return (
     <StyledCard>

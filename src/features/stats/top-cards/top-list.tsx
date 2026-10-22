@@ -1,8 +1,8 @@
 import LoadingSkeleton from "@/components/loading-skeleton";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
+import { useStatsCtx } from "../context/statsCtxProvider";
 import { gethoursAndMinutes } from "../get-stats";
-import { useWeeklyStats } from "../stats-ctx/statsCtxProvider";
 import TopCard from "./top-card";
 
 interface Tops {
@@ -12,17 +12,17 @@ interface Tops {
 }
 
 export default function TopList() {
-  const { totalYearStats, loading, error } = useWeeklyStats()
+  const { totalStats, loading } = useStatsCtx()
   const [tops, setTops] = useState<Tops | null>(null)
 
   useEffect(() => {
-    if (totalYearStats) {
-      const totaltime = totalYearStats.total_seconds
-      const topleng = totalYearStats.languages.reduce((previous, current) => {
+    if (totalStats) {
+      const totaltime = totalStats.total_seconds
+      const topleng = totalStats.languages.reduce((previous, current) => {
         if (previous.total_seconds > current.total_seconds) return previous
         return current
       })
-      const topProject = totalYearStats.projects.reduce((prv, current) => {
+      const topProject = totalStats.projects.reduce((prv, current) => {
         if (prv.total_seconds > current.total_seconds) return prv
         return current
       })
@@ -33,7 +33,7 @@ export default function TopList() {
         top_project: topProject.name
       })
     }
-  }, [totalYearStats])
+  }, [totalStats])
 
   return (
     <View style={{ flexDirection: "column", gap: 20 }}>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Text } from "react-native";
 import { PieChart } from "react-native-chart-kit/v2";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
-import { getStats } from "../get-stats";
+import { getStats } from "./get-stats";
 
 type LengChartData = {
   leng: string

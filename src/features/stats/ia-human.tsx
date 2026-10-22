@@ -7,7 +7,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
-import { gethoursAndMinutes } from "../get-stats";
+import { gethoursAndMinutes } from "./get-stats";
 
 export interface MainRequest {
   total_seconds: number

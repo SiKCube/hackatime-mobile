@@ -1,24 +1,23 @@
 import Alert from "@/components/alert";
 import StyledText from "@/components/ui/text";
-import CodingTimeTodayChart from "@/features/charts/coding-t-today";
-import IaVsHumanChart from "@/features/charts/ia-human";
-import LenguajesPie from "@/features/charts/lenguajes-pie";
-import ProjectsChart from "@/features/charts/projects-chart";
-import RhythmChart from "@/features/charts/rhythm";
-import WeeklyProjectsTimeline from "@/features/charts/weekly-projects-timeline";
-import YearHeatMap from "@/features/charts/year-heatmap";
-import { useWeeklyStats } from "@/features/stats-ctx/statsCtxProvider";
-import TopList from "@/features/top-list/top-list";
+import CodingTimeTodayChart from "@/features/stats/coding-t-today";
+import { useStatsCtx } from "@/features/stats/context/statsCtxProvider";
+import IaVsHumanChart from "@/features/stats/ia-human";
+import LenguajesPie from "@/features/stats/lenguajes-pie";
+import ProjectsChart from "@/features/stats/projects-chart";
+import RhythmChart from "@/features/stats/rhythm";
+import TopList from "@/features/stats/top-cards/top-list";
+import WeeklyProjectsTimeline from "@/features/stats/weekly-projects-timeline";
+import YearHeatMap from "@/features/stats/year-heatmap";
 import { useState } from "react";
-import { Image, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { SvgUri } from "react-native-svg";
 
 export default function HomeScreen() {
   const [selectedStartDate, setSelectedStartDate] = useState<Date>(new Date())
   const [selectedEndDate, setSelectedEndDate] = useState<Date>(new Date())
 
-  const { error } = useWeeklyStats()
+  const { error } = useStatsCtx()
 
   return (
     <SafeAreaView>

@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import Svg, { Rect } from "react-native-svg";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
-import { gethoursAndMinutes } from "../get-stats";
+import { gethoursAndMinutes } from "./get-stats";
 
 export interface SpansRequest {
   spans: Span[];

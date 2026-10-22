@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { ProgressRing } from "react-native-chart-kit/v2";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
-import { gethoursAndMinutes, getStats } from "../get-stats";
+import { gethoursAndMinutes, getStats } from "./get-stats";
 
 export interface SpansRequest {
   spans: Spans[];

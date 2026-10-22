@@ -4,8 +4,8 @@ import StyledText from "@/components/ui/text";
 import { View } from "react-native";
 import { BarChart } from "react-native-chart-kit/v2";
 import { Rect } from "react-native-svg";
-import { gethoursAndMinutes } from "../get-stats";
-import { StatWithWeekNum, useWeeklyStats } from "../stats-ctx/statsCtxProvider";
+import { StatWithWeekNum, useStatsCtx } from "./context/statsCtxProvider";
+import { gethoursAndMinutes } from "./get-stats";
 
 interface Props {
 
@@ -29,7 +29,7 @@ const filterChartData = (weeklyStats: StatWithWeekNum[]) => {
 }
 
 export default function WeeklyProjectsTimeline() {
-  const { loading, error, weeklyStats, projectsNames } = useWeeklyStats()
+  const { loading, weeklyStats, projectsNames } = useStatsCtx()
 
   return (
     <StyledCard>
@@ -75,7 +75,7 @@ export default function WeeklyProjectsTimeline() {
               formatYLabel={(value) => gethoursAndMinutes(value)}
             />
             :
-            <LoadingSkeleton height={350}  />
+            <LoadingSkeleton height={350} />
         }
       </View>
     </StyledCard>

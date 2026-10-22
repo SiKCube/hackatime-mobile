@@ -5,7 +5,7 @@ import StyledCard from "@/components/ui/card";
 import StyledText from "@/components/ui/text";
 import { Ionicons } from "@expo/vector-icons";
 import { Linking, View } from "react-native";
-import { gethoursAndMinutes } from "../get-stats";
+import { gethoursAndMinutes } from "../stats/get-stats";
 
 export interface Project {
   name: string;
