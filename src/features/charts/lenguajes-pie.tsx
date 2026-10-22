@@ -1,10 +1,11 @@
+import Alert from "@/components/alert";
+import LoadingSkeleton from "@/components/loading-skeleton";
 import StyledCard from "@/components/ui/card";
 import StyledText from "@/components/ui/text";
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { PieChart } from "react-native-chart-kit/v2";
-import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
-import { getStats } from "../get-stats";
+import { useWeeklyStats } from "../stats-ctx/statsCtxProvider";
 
 type LengChartData = {
   leng: string
@@ -12,78 +13,46 @@ type LengChartData = {
   color: string
 }[]
 
-interface Props {
-  limit: number
-  categories: string[]
-  projects: string[]
-}
-
-export default function LenguajesPie({ categories, projects, limit }: Props) {
-  const { user, userApikey } = useAuthCtx()
-  const [loading, setLoading] = useState<boolean>(false)
-  const [error, setError] = useState<string | null>(null)
+export default function LenguajesPie() {
   const [chartData, setChartData] = useState<LengChartData | null>(null)
 
+  const { totalYearStats, loading, error } = useWeeklyStats()
+
   useEffect(() => {
-    const getData = async (username: string, apikey: string) => {
-      try {
-        setLoading(true)
-        setError(null)
+    if (totalYearStats?.languages) {
+      const r: LengChartData = totalYearStats.languages.map((leng) => {
+        return {
+          time: leng.total_seconds,
+          color: leng.color,
+          leng: leng.name
+        }
+      })
 
-        const stats = await getStats(username, apikey, {
-          features: ["languages"],
-          filter_by_category: categories,
-          filter_by_project: projects,
-          limit: limit,
-        })
-
-        if (!stats.data.languages) throw Error("No languages found")
-
-        const parsedStats: LengChartData = stats.data.languages.map((leng) => {
-          return {
-            leng: leng.name,
-            time: leng.hours,
-            color: leng.color
-          }
-        })
-
-        setChartData(parsedStats)
-        setLoading(false)
-      } catch (e) {
-        setError(`Can't get chart ${e}`)
-        setLoading(false)
-      }
+      setChartData(r)
     }
-
-    if (user && userApikey) {
-      getData(user.username, userApikey)
-    }
-  }, [])
+  }, [totalYearStats])
 
   return (
     <StyledCard>
       <StyledText weight="bold" size={20}>Languages</StyledText>
-      <Text>{error}</Text>
+      <Alert type="error" msg={error} />
       <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
         {
-          loading ?
-            <Text>loading...</Text>
+          !loading && chartData ?
+            <PieChart
+              data={chartData as any}
+              height={300}
+              width={250}
+              valueKey={"time"}
+              labelKey={"leng"}
+              colorKey="color"
+              interaction={{
+                mode: "tap",
+                deselectOnOutsidePress: true,
+              }}
+            />
             :
-            chartData ?
-              <PieChart
-                data={chartData as any}
-                height={300}
-                width={250}
-                valueKey={"time"}
-                labelKey={"leng"}
-                colorKey="color"
-                interaction={{
-                  mode: "tap",
-                  deselectOnOutsidePress: true,
-                }}
-              />
-              :
-              <Text>no data</Text>
+            <LoadingSkeleton width={250} height={300} />
         }
       </View>
     </StyledCard>

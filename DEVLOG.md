@@ -40,3 +40,17 @@ I played with arrays, works like the chart in the original dashboard, but there 
 
 I edited the original Hackatime logo in school using IbsPaint. There isn't any copyright, right?
 
+## Loading and error ui and re-use of stats ctx data added
+**(Oct 21 2026)** 
+
+What have I been doing this days?
+- I added a projects tab
+- Copy the theme vars on the Hackatime website and put it on the app as a theme (I like the neon theme).
+- I added loading and error UI components. 
+- I ingrated the activiy badge heatmap of hackatime. 
+- re-use data of the `stats-ctx`, but I realize that is mesy try to have all the fetches made by one ctx, now I playing to "divide and conquer", spliting some logic to his own chart, making it more clean, this would mean that I could add custom date ranges. 
+
+Also I had the idea to add a year wrap feature like spotify, but October is ending and a review could take 2 weeks or more, so.    
+
+### October is near to end 
+I need to end this project ASAP, why? Because I planning to buy a PC components combo, and  my cousin will pick it from the US to my coutry. Why not buy it online? In black friday will be a pain and after black friday my cousin will already be here. So if you are a reviewer, you could help me.

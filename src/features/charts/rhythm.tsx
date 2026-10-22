@@ -1,3 +1,5 @@
+import Alert from "@/components/alert";
+import LoadingSkeleton from "@/components/loading-skeleton";
 import { THEME } from "@/components/theme";
 import StyledCard from "@/components/ui/card";
 import StyledText from "@/components/ui/text";
@@ -36,7 +38,7 @@ interface SelectedHour {
   day: string
 }
 
-const WEEK_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+const WEEK_DAYS = ["Monday", "Tuesday", "Wednseday", "Thursday", "Friday", "Saturday", "Sunday"]
 const TIMES = ["12AM", "3AM", "6AM", "9AM", "12PM", "3PM", "6PM", "9PM", "_"]
 const CELL_SIZE = 20
 const GAP = 5
@@ -62,7 +64,7 @@ export default function RhythmChart({ start_date, end_date, projects }: Props) {
           params: {
             start_date,
             end_date,
-            projects: projects.join(",")
+            filter_by_project: projects.join(",")
           },
           headers: {
             Authorization: `Bearer ${apikey}`
@@ -111,15 +113,13 @@ export default function RhythmChart({ start_date, end_date, projects }: Props) {
   return (
     <StyledCard>
       <StyledText weight="bold" size={20}>Coding Rhythm</StyledText>
+      <Alert type="error" msg={error} />
       {
         selectedHour ?
           <View>
-            <StyledText size={15} weight="bold">
-              {selectedHour.day}
-            </StyledText>
             <View style={{ flexDirection: 'row', gap: 4, justifyContent: "center", alignItems: "center" }}>
               <StyledText type="seconday" size={15}>
-                {selectedHour.cellIndex}:00-{selectedHour.cellIndex + 1}:00
+                {selectedHour.day}, {selectedHour.cellIndex}:00-{selectedHour.cellIndex + 1}:00
               </StyledText>
               <View style={{ width: 4, height: 4, backgroundColor: THEME.secondary, borderRadius: 100 }} />
               <StyledText type="seconday" size={15}>
@@ -130,81 +130,77 @@ export default function RhythmChart({ start_date, end_date, projects }: Props) {
           :
           null
       }
-      <Text>{error}</Text>
       <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
         {
-          loading ?
-            <Text>Loading...</Text>
-            :
-            chartData ?
-              <>
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} contentContainerStyle={{
-                  width: (CELL_SIZE + 3) * 30,
-                  justifyContent: "center",
-                }}>
-                  <View style={{ width: (CELL_SIZE + 3) * 27, gap: GAP, marginBottom: 15 }}>
-                    <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
-                      <Text style={{ width: 35, opacity: 0 }}>Hour</Text>
-                      <View style={{ width: (CELL_SIZE + GAP) * 24, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                        {
-                          TIMES.map((v) => <Text style={{ fontSize: 10, opacity: 0.7, color: THEME.secondary }} key={v}>{v}</Text>)
-                        }
-                      </View>
+          !loading && chartData ?
+            <>
+              <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} contentContainerStyle={{
+                width: (CELL_SIZE + 3) * 30,
+                justifyContent: "center",
+              }}>
+                <View style={{ width: (CELL_SIZE + 3) * 27, gap: GAP, marginBottom: 15 }}>
+                  <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
+                    <Text style={{ width: 35, opacity: 0 }}>Hour</Text>
+                    <View style={{ width: (CELL_SIZE + GAP) * 24, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                      {
+                        TIMES.map((v) => <Text style={{ fontSize: 10, opacity: 0.7, color: THEME.secondary }} key={v}>{v}</Text>)
+                      }
                     </View>
-                    {
-                      chartData.map((dayData, dayDataIndex) => {
-                        return (
-                          <View key={dayDataIndex} style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
-                            <Text style={{ width: 35, opacity: 0.7, fontSize: 12, color: THEME.secondary }}>
-                              {dayData.dayString}
-                            </Text>
-                            <Svg height={CELL_SIZE} width={(CELL_SIZE + GAP) * 24}>
-                              {
-                                dayData.hours.map((value, index) => {
-                                  const cellid = index * (CELL_SIZE + GAP) + dayDataIndex
-                                  const vsTopHour = Number((value / topHours).toFixed(2))
-
-                                  return (
-                                    <Rect
-                                      key={index}
-                                      onPress={() => setSelectedHour({
-                                        hour: value,
-                                        cellIndex: index,
-                                        cellId: cellid,
-                                        day: dayData.dayString
-                                      })}
-                                      x={index * (CELL_SIZE + GAP)}
-                                      y="0"
-                                      rx="5"
-                                      ry="5"
-                                      width={CELL_SIZE}
-                                      height={CELL_SIZE}
-                                      fillOpacity={vsTopHour >= 0.1 ?
-                                        vsTopHour
-                                        :
-                                        0.1
-                                      }
-                                      stroke={THEME.primary}
-                                      strokeWidth={selectedHour?.cellId === cellid ? 1.5 : 0}
-                                      strokeOpacity={1}
-                                      fill={Number((value / 3600).toFixed(2)) >= 0.01 ?
-                                        THEME.primary
-                                        :
-                                        "gray"}
-                                    />
-                                  )
-                                })
-                              }
-                            </Svg>
-                          </View>
-                        )
-                      })
-                    }
                   </View>
-                </ScrollView>
-              </>
-              :
-              <Text>No data</Text>
+                  {
+                    chartData.map((dayData, dayDataIndex) => {
+                      return (
+                        <View key={dayDataIndex} style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
+                          <Text style={{ width: 35, opacity: 0.7, fontSize: 12, color: THEME.secondary }}>
+                            {dayData.dayString.slice(0, 3)}
+                          </Text>
+                          <Svg height={CELL_SIZE} width={(CELL_SIZE + GAP) * 24}>
+                            {
+                              dayData.hours.map((value, index) => {
+                                const cellid = index * (CELL_SIZE + GAP) + dayDataIndex
+                                const vsTopHour = Number((value / topHours).toFixed(2))
+
+                                return (
+                                  <Rect
+                                    key={index}
+                                    onPress={() => setSelectedHour({
+                                      hour: value,
+                                      cellIndex: index,
+                                      cellId: cellid,
+                                      day: dayData.dayString
+                                    })}
+                                    x={index * (CELL_SIZE + GAP)}
+                                    y="0"
+                                    rx="5"
+                                    ry="5"
+                                    width={CELL_SIZE}
+                                    height={CELL_SIZE}
+                                    fillOpacity={vsTopHour >= 0.1 ?
+                                      vsTopHour
+                                      :
+                                      0.1
+                                    }
+                                    stroke={THEME.primary}
+                                    strokeWidth={selectedHour?.cellId === cellid ? 1.5 : 0}
+                                    strokeOpacity={1}
+                                    fill={Number((value / 3600).toFixed(2)) >= 0.01 ?
+                                      THEME.primary
+                                      :
+                                      "gray"}
+                                  />
+                                )
+                              })
+                            }
+                          </Svg>
+                        </View>
+                      )
+                    })
+                  }
+                </View>
+              </ScrollView>
+            </>
+            :
+            <LoadingSkeleton height={250} />
         }
       </View>
     </StyledCard>

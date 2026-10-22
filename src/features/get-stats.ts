@@ -50,7 +50,7 @@ export interface Projects {
   digital: string;
 }
 
-interface Languages {
+export interface Languages {
   name: string;
   total_seconds: number;
   text: string;

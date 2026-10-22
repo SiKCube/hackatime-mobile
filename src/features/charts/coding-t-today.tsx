@@ -1,3 +1,5 @@
+import Alert from "@/components/alert";
+import LoadingSkeleton from "@/components/loading-skeleton";
 import { THEME } from "@/components/theme";
 import StyledCard from "@/components/ui/card";
 import StyledText from "@/components/ui/text";
@@ -87,37 +89,34 @@ export default function CodingTimeTodayChart({ start_date, end_date, projects, n
     <StyledCard>
       <StyledText weight="bold" size={20}>Coding Time Today</StyledText>
       <StyledText type="seconday" size={15}>Compared with your last eight days</StyledText>
-      <Text>{error}</Text>
+      <Alert msg={error} type="error" />
       {
-        loading ?
-          <Text>Loading...</Text>
-          :
-          chartData ?
-            <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 10 }}>
-              <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", }}>
-                <ProgressRing
-                  height={170}
-                  width={170}
-                  value={chartData.score}
-                  centerLabel={() => `${Math.floor(chartData.score * 100)}%`}
-                />
-                {
-                  Math.floor(chartData.score * 100) ?
-                    <Text style={{ color: THEME.danger, fontWeight: "bold" }}>
-                      {100 - Math.floor(chartData.score * 100)}% below usual daily total
-                    </Text>
-                    :
-                    null
-                }
-              </View>
-              <View style={{ flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center" }}>
-                <StyledText type="seconday" size={17}>Today {gethoursAndMinutes(chartData.today)}</StyledText>
-                <View style={{ width: 4, height: 4, backgroundColor: THEME.secondary, borderRadius: 100 }} />
-                <StyledText type="seconday" size={15}>Usual {gethoursAndMinutes(chartData.promedio)}</StyledText>
-              </View>
+        !loading && chartData && !error ?
+          <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 10 }}>
+            <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", }}>
+              <ProgressRing
+                height={170}
+                width={170}
+                value={chartData.score}
+                centerLabel={() => `${Math.floor(chartData.score * 100)}%`}
+              />
+              {
+                Math.floor(chartData.score * 100) ?
+                  <Text style={{ color: THEME.danger, fontWeight: "bold" }}>
+                    {100 - Math.floor(chartData.score * 100)}% below usual daily total
+                  </Text>
+                  :
+                  null
+              }
             </View>
-            :
-            <Text>No data</Text>
+            <View style={{ flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center" }}>
+              <StyledText type="seconday" size={17}>Today {gethoursAndMinutes(chartData.today)}</StyledText>
+              <View style={{ width: 4, height: 4, backgroundColor: THEME.secondary, borderRadius: 100 }} />
+              <StyledText type="seconday" size={15}>Usual {gethoursAndMinutes(chartData.promedio)}</StyledText>
+            </View>
+          </View>
+          :
+          <LoadingSkeleton width={170} height={170} />
       }
     </StyledCard>
   )
