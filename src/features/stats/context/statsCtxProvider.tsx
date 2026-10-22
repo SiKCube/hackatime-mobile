@@ -49,8 +49,10 @@ interface StatsContextType {
   todayStats: Stat | null
   loading: boolean
   error: string | null
-  selectedYear: number
-  setSelectedYear: Dispatch<SetStateAction<number>>
+  startDate: Date,
+  setStartDate: Dispatch<SetStateAction<Date>>,
+  endDate: Date
+  setEndDate: Dispatch<SetStateAction<Date>>,
 }
 
 const STARTER_VALUES: StatsContextType = {
@@ -60,13 +62,15 @@ const STARTER_VALUES: StatsContextType = {
   weeklyStats: null,
   todayStats: null,
   totalStats: null,
-  selectedYear: new Date().getFullYear(),
-  setSelectedYear: () => { },
+  startDate: new Date(new Date().getFullYear(), 0, 1, 1),
+  setStartDate: () => { },
+  endDate: new Date(new Date(new Date().getFullYear() + 1, 0, 1).getTime() - 24 * 60 * 60 * 1000),
+  setEndDate: () => { }
 }
 
 const StatsContext = createContext<StatsContextType>(STARTER_VALUES)
 
-const getProjectsNames = async (username: string, apikey: string, start_date: string, end_date: string) => {
+const getProjectsNames = async (username: string, apikey: string, start_date: Date, end_date: Date) => {
   const { data } = await axios.request({
     method: "GET",
     url: `https://hackatime.hackclub.com/api/v1/users/${username}/projects`,
@@ -74,8 +78,8 @@ const getProjectsNames = async (username: string, apikey: string, start_date: st
       Authorization: `Bearer ${apikey}`
     },
     params: {
-      start_date,
-      end_date
+      start_date: start_date.toISOString(),
+      end_date: end_date.toDateString()
     }
   })
 
@@ -99,25 +103,26 @@ export default function StatsCtxProvider({ children }: { children: React.ReactNo
   const [projectsNames, setProjectNames] = useState<string[] | null>(STARTER_VALUES.projectsNames)
 
   // parameters
-  const [selectedYear, setSelectedYear] = useState<number>(STARTER_VALUES.selectedYear)
+  const [startDate, setStartDate] = useState<Date>(STARTER_VALUES.startDate)
+  const [endDate, setEndDate] = useState<Date>(STARTER_VALUES.endDate)
 
   // require data
   const { user, userApikey } = useAuthCtx()
   const network = useNetworkState()
 
-  const getCtxStats = async (username: string, apikey: string, selectedYearState: number) => {
+  const getCtxStats = async (
+    username: string, apikey: string,
+    startDate: Date, endDate: Date,
+  ) => {
     try {
       setloading(true)
       setError(null)
 
-      const firstDateOfTheYearDate = new Date(selectedYearState, 0, 1)
-      const lastDateOfTheYearDate = new Date(new Date(selectedYearState + 1, 0, 1).getTime() - 24 * 60 * 60 * 1000)
+      const statsPerWeek = await getWeeklyStats(startDate, endDate, username, apikey)
 
-      const statsPerWeek = await getWeeklyStats(firstDateOfTheYearDate, lastDateOfTheYearDate, username, apikey)
+      const totalStats = await getTotalStats(startDate, endDate, username, apikey)
 
-      const totalStats = await getTotalStats(firstDateOfTheYearDate, lastDateOfTheYearDate, username, apikey)
-
-      const prjlist = await getProjectsNames(username, apikey, firstDateOfTheYearDate.toISOString().slice(0, 10), lastDateOfTheYearDate.toISOString().slice(0, 10))
+      const prjlist = await getProjectsNames(username, apikey, startDate, endDate)
 
       const todayStats = await geTodayStats(username, apikey)
 
@@ -134,16 +139,23 @@ export default function StatsCtxProvider({ children }: { children: React.ReactNo
 
   useEffect(() => {
     if (user && userApikey) {
-      getCtxStats(user.username, userApikey, selectedYear)
+      getCtxStats(user.username, userApikey, startDate, endDate)
     }
   }, [])
+
+  useEffect(() => {
+    if (user && userApikey) {
+      getCtxStats(user.username, userApikey, startDate, endDate)
+    }
+  }, [startDate, endDate])
 
   return (
     <StatsContext.Provider value={{
       weeklyStats, totalStats, todayStats,
       loading, error,
       projectsNames,
-      selectedYear, setSelectedYear,
+      startDate, setStartDate,
+      endDate, setEndDate
     }}>
       {children}
     </StatsContext.Provider>

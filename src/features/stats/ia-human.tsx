@@ -7,7 +7,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
-import { gethoursAndMinutes } from "./get-stats";
+import { gethoursAndMinutes, getStats } from "./get-stats";
 
 export interface MainRequest {
   total_seconds: number
@@ -18,20 +18,16 @@ interface BarData {
   porcentage: number
 }
 
-const getTotalSecs = async (username: string, apikey: string, noia: boolean): Promise<number> => {
-  const { data }: { data: MainRequest } = await axios.request({
-    method: "GET",
-    url: `https://hackatime.hackclub.com/api/v1/users/${username}/stats`,
-    params: {
-      total_seconds: true,
-      no_ai_coding: noia
-    },
-    headers: {
-      Authorization: `Bearer ${apikey}`
-    }
+const getTotalSecs = async (username: string, apikey: string, noia: boolean, startDate: string, endDate: string): Promise<number> => {
+  const { data } = await getStats(username, apikey, {
+    features: [],
+    filter_by_project: [],
+    filter_by_category: [],
+    no_ia: noia,
+    start_date: startDate,
+    end_date: endDate,
+    total_seconds: false
   })
-
-  if (!data) throw Error("No data in request")
 
   return data.total_seconds
 }
@@ -41,7 +37,12 @@ const get100porcent = (value: number, your100: number): number => {
   return r
 }
 
-export default function IaVsHumanChart() {
+interface Props {
+  start_date: string
+  end_date: string
+}
+
+export default function IaVsHumanChart({ start_date, end_date }: Props) {
   const { user, userApikey } = useAuthCtx()
 
   const [loading, setLoading] = useState<boolean>(false)
@@ -54,11 +55,10 @@ export default function IaVsHumanChart() {
         setLoading(true)
         setError(null)
 
-        const total = await getTotalSecs(username, apikey, false)
-        const totalNotAI = await getTotalSecs(username, apikey, true)
+        const total = await getTotalSecs(username, apikey, false, start_date, end_date)
+        const totalNotAI = await getTotalSecs(username, apikey, true, start_date, end_date)
 
         const iaCodingSecs = total - totalNotAI
-
 
         setChartData([
           {

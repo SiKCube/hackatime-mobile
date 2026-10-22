@@ -2,15 +2,15 @@ import { getStats } from "../get-stats"
 import { Stat } from "./statsCtxProvider"
 
 export async function getTotalStats(
-  firstDateOfTheYearDate: Date, lastDateOfTheYearDate: Date,
+  startDate: Date, endDate: Date,
   username: string, apikey: string
 ) {
   const fetchedTotalYearStats = await getStats(username, apikey, {
     features: ["languages", "projects"],
     filter_by_category: [],
     filter_by_project: [],
-    start_date: firstDateOfTheYearDate.toISOString().slice(0, 10),
-    end_date: lastDateOfTheYearDate.toISOString().slice(0, 10)
+    start_date: startDate.toISOString().slice(0, 10),
+    end_date: endDate.toISOString().slice(0, 10)
   })
   const parsedTotalYearStats: Stat = {
     start_date: fetchedTotalYearStats.data.start,

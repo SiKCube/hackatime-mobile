@@ -86,8 +86,6 @@ export async function getStats(username: string, apikey: string, params: UserSta
     throw Error("Request fail")
   }
 
-  if (!data.data || !data.trust_factor) throw Error("Data doesn't qualify")
-
   return data
 }
 

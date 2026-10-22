@@ -12,10 +12,12 @@ interface Props {
 }
 
 const filterChartData = (weeklyStats: StatWithWeekNum[]) => {
-  let chartData: Record<string, number>[] = []
+  let chartData: Record<string, number | string>[] = []
   weeklyStats.forEach((week) => {
     if (week.projects.length > 0) {
-      let r: Record<string, number> = { weeknum: week.weekNumber }
+      let r: Record<string, number | string> = {
+        weeknum: `${new Date(week.start_date).toLocaleDateString("en", { day: "2-digit", month: "short" })}-${new Date(week.end_date).toLocaleDateString("en", { day: "2-digit" })}`,
+      }
 
       week.projects.forEach((prj) => {
         r[prj.name] = prj.total_seconds
@@ -60,7 +62,7 @@ export default function WeeklyProjectsTimeline() {
               tooltip={{
                 anchor: "pointer",
                 placement: "above",
-                width: 200
+                width: 200,
               }}
               selectionAnimation={false}
               renderBar={({ bar, fill }) => (

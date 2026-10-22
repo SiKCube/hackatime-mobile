@@ -116,7 +116,7 @@ export default function CodingTimeTodayChart({ start_date, end_date, projects, n
             </View>
           </View>
           :
-          <LoadingSkeleton width={170} height={170} />
+          <LoadingSkeleton height={240} />
       }
     </StyledCard>
   )
