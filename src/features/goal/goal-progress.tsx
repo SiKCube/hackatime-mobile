@@ -1,0 +1,139 @@
+import Alert from "@/components/alert";
+import LoadingSkeleton from "@/components/loading-skeleton";
+import { THEME } from "@/components/theme";
+import StyledCard from "@/components/ui/card";
+import StyledText from "@/components/ui/text";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { View } from "react-native";
+import Svg, { Rect } from "react-native-svg";
+import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
+import { gethoursAndMinutes } from "../stats/get-stats";
+import { Ionicons } from "@expo/vector-icons";
+
+export interface GoalRequest {
+  data: Data;
+}
+
+export interface Data {
+  grand_total: GrandTotal;
+  goal: Goal;
+}
+
+export interface Goal {
+  target_seconds: number;
+  tracked_seconds: number;
+  completion_percent: number;
+  complete: boolean;
+}
+
+export interface GrandTotal {
+  text: string;
+  total_seconds: number;
+}
+
+const getLeftTime = () => {
+  const today = new Date()
+  const todayZero = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0).getTime()
+  const passtime = today.getTime() - todayZero
+
+  return gethoursAndMinutes(passtime / 1000, true)
+}
+
+export default function GoalProgress() {
+  const [goal, setGoal] = useState<Data | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const { user, userApikey } = useAuthCtx()
+
+  useEffect(() => {
+    const getGoal = async (userid: string, apikey: string) => {
+      try {
+        setError(null)
+        setLoading(true)
+
+        const { data }: { data?: GoalRequest } = await axios.request({
+          url: `https://hackatime.hackclub.com/api/hackatime/v1/users/${userid}/statusbar/today`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${apikey}`
+          },
+        })
+
+        if (!data) throw Error("Can't get goals")
+
+        setGoal(data.data)
+        setLoading(false)
+      } catch (e) {
+        setError(`${e}`)
+        setLoading(false)
+      }
+    }
+
+    if (user && userApikey) {
+      getGoal(user.id, userApikey)
+    }
+  }, [])
+
+  return (
+    <StyledCard>
+      <Alert msg={error} type="error" />
+      {
+        goal && !loading ?
+          <View style={{ flexDirection: "column", gap: 10 }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <View>
+                <StyledText type="seconday">
+                  <StyledText type={goal.goal.complete ? "success" : undefined} weight="bold" size={18}>{gethoursAndMinutes(goal.goal.tracked_seconds)}</StyledText>
+                  /
+                  <StyledText type="seconday" size={13}>{gethoursAndMinutes(goal.goal.target_seconds)}</StyledText>
+                </StyledText>
+                <StyledText type="seconday" size={15}>{goal.goal.completion_percent}%</StyledText>
+              </View>
+              <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
+                <View>
+                  <StyledText weight="bold" type={goal.goal.complete ? "success" : "seconday"} size={15}>Daily goal</StyledText>
+                  <StyledText type={goal.goal.complete ? "success" : "seconday"} size={12}>
+                    {
+                      goal.goal.complete ?
+                        "Done!"
+                        :
+                        `${getLeftTime()} left today`
+                    }
+                  </StyledText>
+                </View>
+                <Ionicons
+                  name={goal.goal.complete ? "checkmark-circle" : "time"}
+                  size={30}
+                  color={goal.goal.complete ? THEME.success : THEME.secondary}
+                />
+              </View>
+            </View>
+            <Svg width={"100%"} height={10}>
+              <Rect
+                x="0"
+                y="0"
+                rx="5"
+                ry="5"
+                width={"100%"}
+                height={10}
+                fill={THEME.surface_200}
+              />
+              <Rect
+                x="0"
+                y="0"
+                rx="5"
+                ry="5"
+                width={`${goal.goal.completion_percent}%`}
+                height={10}
+                fill={goal.goal.complete ? THEME.success : THEME.primary}
+              />
+            </Svg>
+          </View>
+          :
+          <LoadingSkeleton height={50} />
+      }
+    </StyledCard>
+  )
+}
