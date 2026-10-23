@@ -26,8 +26,8 @@ type ChartData = {
 }
 
 interface Props {
-  start_date: string
-  end_date: string
+  start_date: Date
+  end_date: Date
   projects: string[]
 }
 
@@ -51,64 +51,70 @@ export default function RhythmChart({ start_date, end_date, projects }: Props) {
   const [error, setError] = useState<string | null>(null)
 
   const { user, userApikey } = useAuthCtx()
+  
+  const getSpans = async (username: string, apikey: string) => {
+    try {
+      setLoading(true)
+      setError(null)
+
+      const { data }: { data: SpansRequest } = await axios.request({
+        method: "GET",
+        url: `https://hackatime.hackclub.com/api/v1/users/${username}/heartbeats/spans`,
+        params: {
+          start_date: start_date.toISOString(),
+          end_date: end_date.toISOString(),
+          filter_by_project: projects.join(",")
+        },
+        headers: {
+          Authorization: `Bearer ${apikey}`
+        }
+      })
+
+      if (!data) throw Error("Data is undefined")
+
+      const spans: Span[] = data.spans
+
+      let result: ChartData[] = WEEK_DAYS.map((weekday) => {
+        return {
+          dayString: weekday,
+          hours: Array.from({ length: 24 }, () => 0)
+        }
+      })
+      let mosthours = 0
+      spans.forEach((span) => {
+        const date = new Date(span.start_time * 1000)
+        const dayNumber = (date.getUTCDay() || 7) - 1
+
+        const hours24 = Number(date.toLocaleString("en", { hour: "2-digit", hour12: false }))
+
+        const addedHours = Number((result[dayNumber].hours[hours24] + span.duration).toFixed(2))
+
+        if (addedHours > mosthours) mosthours = addedHours
+
+        result[dayNumber].dayString = WEEK_DAYS[dayNumber]
+        result[dayNumber].hours[hours24] = addedHours
+      })
+
+      setChartData(result)
+      setTopHours(mosthours)
+      setLoading(false)
+    } catch (e) {
+      setError(`${e}`)
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const getSpans = async (username: string, apikey: string) => {
-      try {
-        setLoading(true)
-        setError(null)
-
-        const { data }: { data: SpansRequest } = await axios.request({
-          method: "GET",
-          url: `https://hackatime.hackclub.com/api/v1/users/${username}/heartbeats/spans`,
-          params: {
-            start_date,
-            end_date,
-            filter_by_project: projects.join(",")
-          },
-          headers: {
-            Authorization: `Bearer ${apikey}`
-          }
-        })
-
-        if (!data) throw Error("Data is undefined")
-
-        const spans: Span[] = data.spans
-
-        let result: ChartData[] = WEEK_DAYS.map((weekday) => {
-          return {
-            dayString: weekday,
-            hours: Array.from({ length: 24 }, () => 0)
-          }
-        })
-        let mosthours = 0
-        spans.forEach((span) => {
-          const date = new Date(span.start_time * 1000)
-          const dayNumber = (date.getUTCDay() || 7) - 1
-
-          const hours24 = Number(date.toLocaleString("en", { hour: "2-digit", hour12: false }))
-
-          const addedHours = Number((result[dayNumber].hours[hours24] + span.duration).toFixed(2))
-
-          if (addedHours > mosthours) mosthours = addedHours
-
-          result[dayNumber].dayString = WEEK_DAYS[dayNumber]
-          result[dayNumber].hours[hours24] = addedHours
-        })
-
-        setChartData(result)
-        setTopHours(mosthours)
-        setLoading(false)
-      } catch (e) {
-        setError(`${e}`)
-        setLoading(false)
-      }
-    }
-
     if (user && userApikey) {
       getSpans(user.username, userApikey)
     }
   }, [])
+
+  useEffect(() => {
+    if (user && userApikey) {
+      getSpans(user.username, userApikey)
+    }
+  }, [start_date, end_date])
 
   return (
     <StyledCard>

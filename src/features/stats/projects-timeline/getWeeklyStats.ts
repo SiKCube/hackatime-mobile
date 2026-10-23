@@ -1,10 +1,6 @@
 import { getStoredData, storeData } from "@/features/storage"
-import { getStats, StatsRequest } from "../get-stats"
-import { Stat } from "./statsCtxProvider"
-
-export interface StatWithWeekNum extends Stat {
-  weekNumber: number
-}
+import { getStats } from "../get-stats"
+import type { StatWithWeekNum } from "../stats"
 
 // it is Monday bu default, bruh
 // this gets the starting monday of the week
@@ -64,11 +60,11 @@ const stats = async (
   startDate: string, endDate: string,
   weekNum: number
 ): Promise<StatWithWeekNum> => {
-  const stored = await getStoredData(`stat-week/${startDate}/${endDate}`)
+  // const stored = await getStoredData(`stat-week/${startDate}/${endDate}`)
 
-  if (stored) {
-    return JSON.parse(stored)
-  }
+  // if (stored) {
+  //   return JSON.parse(stored)
+  // }
 
   const res = await getStats(username, apikey, {
     start_date: startDate,
@@ -91,9 +87,9 @@ const stats = async (
     languages: res.data.languages,
     projects: res.data.projects
   }
-  
-  const storeKey = `stat-week/${startDate}/${endDate}`
-  await storeData(storeKey, JSON.stringify(filterRes))
+
+  // const storeKey = `stat-week/${startDate}/${endDate}`
+  // await storeData(storeKey, JSON.stringify(filterRes))
 
   return filterRes
 }

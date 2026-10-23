@@ -26,8 +26,8 @@ interface ChartData {
 }
 
 interface Props {
-  start_date: string,
-  end_date: string,
+  start_date: Date,
+  end_date: Date,
   projects: string[],
   no_ia?: boolean
 }
@@ -39,51 +39,57 @@ export default function CodingTimeTodayChart({ start_date, end_date, projects, n
   const [error, setError] = useState<string | null>(null)
   const [chartData, setChartData] = useState<ChartData | null>(null)
 
-  useEffect(() => {
-    const getLast8days = async (username: string, apikey: string) => {
-      try {
-        setLoading(true)
-        setError(null)
+  const getLast8days = async (username: string, apikey: string) => {
+    try {
+      setLoading(true)
+      setError(null)
 
-        const { data } = await getStats(username, apikey, {
-          features: [],
-          filter_by_category: [],
-          filter_by_project: [],
-          start_date,
-          end_date,
-          no_ia
-        })
+      const { data } = await getStats(username, apikey, {
+        features: [],
+        filter_by_category: [],
+        filter_by_project: [],
+        start_date,
+        end_date,
+        no_ia
+      })
 
-        const x = new Date()
-        const today = new Date(x.getFullYear(), x.getMonth(), x.getDate())
-        const todayEnd = new Date(today.getTime() + 23 * 60 * 60 * 1000)
+      const x = new Date()
+      const today = new Date(x.getFullYear(), x.getMonth(), x.getDate())
+      const todayEnd = new Date(today.getTime() + 23 * 60 * 60 * 1000)
 
-        const todayData = await getStats(username, apikey, {
-          features: [],
-          filter_by_category: [],
-          filter_by_project: projects,
-          no_ia,
-          start_date: today.toISOString(),
-          end_date: todayEnd.toISOString()
-        })
+      const todayData = await getStats(username, apikey, {
+        features: [],
+        filter_by_category: [],
+        filter_by_project: projects,
+        no_ia,
+        start_date: today.toISOString(),
+        end_date: todayEnd.toISOString()
+      })
 
-        const score = Number((Math.floor((todayData.data.total_seconds * 100) / data.daily_average) * 0.01).toFixed(2))
+      const score = Number((Math.floor((todayData.data.total_seconds * 100) / data.daily_average) * 0.01).toFixed(2))
 
-        setChartData({
-          score,
-          promedio: data.daily_average,
-          today: todayData.data.total_seconds
-        })
-        setLoading(false)
-      } catch (e) {
-        return (`${e}`)
-      }
+      setChartData({
+        score,
+        promedio: data.daily_average,
+        today: todayData.data.total_seconds
+      })
+      setLoading(false)
+    } catch (e) {
+      return (`${e}`)
     }
+  }
 
+  useEffect(() => {
     if (user && userApikey) {
       getLast8days(user.username, userApikey)
     }
   }, [])
+
+  useEffect(() => {
+    if (user && userApikey) {
+      getLast8days(user.username, userApikey)
+    }
+  }, [start_date, end_date])
 
   return (
     <StyledCard>

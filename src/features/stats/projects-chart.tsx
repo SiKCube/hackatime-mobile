@@ -1,3 +1,4 @@
+import Alert from "@/components/alert";
 import LoadingSkeleton from "@/components/loading-skeleton";
 import StyledCard from "@/components/ui/card";
 import StyledText from "@/components/ui/text";
@@ -16,7 +17,7 @@ interface ChartBarType {
 
 export default function ProjectsChart() {
   const [chartData, setChartData] = useState<ChartDataType | null>(null)
-  const { totalStats, loading } = useStatsCtx()
+  const { totalStats, loading, error } = useStatsCtx()
 
   useEffect(() => {
     if (totalStats?.projects) {
@@ -34,6 +35,7 @@ export default function ProjectsChart() {
   return (
     <StyledCard>
       <StyledText size={20} weight="bold">Project Durations</StyledText>
+      <Alert type="error" msg={error} />
       <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
         {
           !loading && chartData ?

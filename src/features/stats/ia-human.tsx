@@ -18,14 +18,14 @@ interface BarData {
   porcentage: number
 }
 
-const getTotalSecs = async (username: string, apikey: string, noia: boolean, startDate: string, endDate: string): Promise<number> => {
+const getTotalSecs = async (username: string, apikey: string, noia: boolean, startDate: Date, endDate: Date): Promise<number> => {
   const { data } = await getStats(username, apikey, {
     features: [],
     filter_by_project: [],
     filter_by_category: [],
     no_ia: noia,
-    start_date: startDate,
-    end_date: endDate,
+    start_date: startDate.toISOString(),
+    end_date: endDate.toISOString(),
     total_seconds: false
   })
 
@@ -38,8 +38,8 @@ const get100porcent = (value: number, your100: number): number => {
 }
 
 interface Props {
-  start_date: string
-  end_date: string
+  start_date: Date
+  end_date: Date
 }
 
 export default function IaVsHumanChart({ start_date, end_date }: Props) {
@@ -49,38 +49,44 @@ export default function IaVsHumanChart({ start_date, end_date }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [chartData, setChartData] = useState<[BarData, BarData] | null>(null)
 
-  useEffect(() => {
-    const getStat = async (username: string, apikey: string) => {
-      try {
-        setLoading(true)
-        setError(null)
+  const getStat = async (username: string, apikey: string) => {
+    try {
+      setLoading(true)
+      setError(null)
 
-        const total = await getTotalSecs(username, apikey, false, start_date, end_date)
-        const totalNotAI = await getTotalSecs(username, apikey, true, start_date, end_date)
+      const total = await getTotalSecs(username, apikey, false, start_date, end_date)
+      const totalNotAI = await getTotalSecs(username, apikey, true, start_date, end_date)
 
-        const iaCodingSecs = total - totalNotAI
+      const iaCodingSecs = total - totalNotAI
 
-        setChartData([
-          {
-            texttime: gethoursAndMinutes(totalNotAI),
-            porcentage: get100porcent(totalNotAI, total)
-          },
-          {
-            texttime: gethoursAndMinutes(iaCodingSecs),
-            porcentage: get100porcent(iaCodingSecs, total)
-          }
-        ])
-        setLoading(false)
-      } catch (e) {
-        setError(`${e}`)
-        setLoading(false)
-      }
+      setChartData([
+        {
+          texttime: gethoursAndMinutes(totalNotAI),
+          porcentage: get100porcent(totalNotAI, total)
+        },
+        {
+          texttime: gethoursAndMinutes(iaCodingSecs),
+          porcentage: get100porcent(iaCodingSecs, total)
+        }
+      ])
+      setLoading(false)
+    } catch (e) {
+      setError(`${e}`)
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     if (userApikey && user) {
       getStat(user.username, userApikey)
     }
   }, [])
+
+  useEffect(() => {
+    if (userApikey && user) {
+      getStat(user.username, userApikey)
+    }
+  }, [start_date, end_date])
 
   return (
     <StyledCard>

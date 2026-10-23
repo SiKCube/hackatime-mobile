@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { useStatsCtx } from "../context/statsCtxProvider";
 import { gethoursAndMinutes } from "../get-stats";
 import TopCard from "./top-card";
+import Alert from "@/components/alert";
 
 interface Tops {
   total_time_secs: number
@@ -12,13 +13,13 @@ interface Tops {
 }
 
 export default function TopList() {
-  const { totalStats, loading } = useStatsCtx()
+  const { totalStats, loading, error } = useStatsCtx()
   const [tops, setTops] = useState<Tops | null>(null)
 
   useEffect(() => {
     if (totalStats) {
       const totaltime = totalStats.total_seconds
-      const topleng = totalStats.languages.length > 0 ? 
+      const topleng = totalStats.languages.length > 0 ?
         totalStats.languages.reduce((previous, current) => {
           if (previous.total_seconds > current.total_seconds) return previous
           return current
@@ -43,6 +44,7 @@ export default function TopList() {
 
   return (
     <View style={{ flexDirection: "column", gap: 20 }}>
+      <Alert type="error" msg={error} />
       {
         !loading && tops ?
           <>
