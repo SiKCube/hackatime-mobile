@@ -19,12 +19,6 @@ export default function HomeScreen() {
   return (
     <SafeAreaView>
       <Alert type="error" msg={error} />
-      <StyledText>
-        {startDate.toISOString()}
-      </StyledText>
-      <StyledText>
-        {endDate.toISOString()}
-      </StyledText>
       <ScrollView contentContainerStyle={{ padding: 20, gap: 20 }}>
         <StyledText weight="bold" size={20}>
           Keep Track Of

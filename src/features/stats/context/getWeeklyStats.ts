@@ -1,4 +1,5 @@
-import { getStats } from "../get-stats"
+import { getStoredData, storeData } from "@/features/storage"
+import { getStats, StatsRequest } from "../get-stats"
 import { Stat } from "./statsCtxProvider"
 
 export interface StatWithWeekNum extends Stat {
@@ -31,17 +32,17 @@ const getWeekNumByIsoString = (isoStringDate: string): number => {
 
 const getweeklist = (startDate: Date, endDate: Date) => {
   const numYearsToEnd = endDate.getFullYear() - startDate.getFullYear()
-  const lastDateOfStarterDate = new Date(new Date(startDate.getFullYear() + 1, 0, 1, 1).getTime() - 24 * 60 * 60 * 1000)
+  // const lastDateOfStarterDate = new Date(new Date(startDate.getFullYear() + 1, 0, 1, 1).getTime() - 24 * 60 * 60 * 1000)
 
-  if (numYearsToEnd === 0) {
-    const endYear = new Date(new Date(endDate.getFullYear() + 1, 0, 1, 1).getTime() - 24 * 60 * 60 * 1000)
+  // if (numYearsToEnd === 0) {
+  //   const endYear = new Date(new Date(endDate.getFullYear() + 1, 0, 1, 1).getTime() - 24 * 60 * 60 * 1000)
 
-    const yearWeekNum = getWeekNumByIsoString(endYear.toISOString())
+  //   const yearWeekNum = getWeekNumByIsoString(endYear.toISOString())
 
-    const weekList = Array.from({ length: yearWeekNum }, (_, i) => i + 1)
+  //   const weekList = Array.from({ length: yearWeekNum }, (_, i) => i + 1)
 
-    return weekList
-  }
+  //   return weekList
+  // }
 
   let totalWeeks = 0
   Array.from({ length: numYearsToEnd + 1 }, (_, i) => i).forEach((plusToYear) => {
@@ -55,6 +56,46 @@ const getweeklist = (startDate: Date, endDate: Date) => {
   const startYearWeeknum = getWeekNumByIsoString(startDate.toISOString())
 
   return weekList.filter((weeknum) => weeknum >= startYearWeeknum)
+}
+
+const stats = async (
+  username: string,
+  apikey: string,
+  startDate: string, endDate: string,
+  weekNum: number
+): Promise<StatWithWeekNum> => {
+  const stored = await getStoredData(`stat-week/${startDate}/${endDate}`)
+
+  if (stored) {
+    return JSON.parse(stored)
+  }
+
+  const res = await getStats(username, apikey, {
+    start_date: startDate,
+    end_date: endDate,
+    features: ["projects", "languages"],
+    filter_by_category: [],
+    filter_by_project: [],
+  })
+
+  if (!res.data.projects || !res.data.languages) throw Error("Undefined, projects or languages values")
+
+  const filterRes: StatWithWeekNum = {
+    weekNumber: weekNum,
+    start_date: res.data.start,
+    end_date: res.data.end,
+    daily_average: res.data.daily_average,
+    human_readable_daily_average: res.data.human_readable_daily_average,
+    total_seconds: res.data.total_seconds,
+    human_readable_total: res.data.human_readable_total,
+    languages: res.data.languages,
+    projects: res.data.projects
+  }
+  
+  const storeKey = `stat-week/${startDate}/${endDate}`
+  await storeData(storeKey, JSON.stringify(filterRes))
+
+  return filterRes
 }
 
 export async function getWeeklyStats(
@@ -74,78 +115,14 @@ export async function getWeeklyStats(
     lastDate = new Date(currentStartDate.getTime() + (86400000 * 7))
 
     // fetching the data in that period of time (week)
-    const res = await getStats(username, apikey, {
-      start_date: currentStartDate.toISOString().slice(0, 10),
-      end_date: currentEndDate.toISOString().slice(0, 10),
-      features: ["projects", "languages"],
-      filter_by_category: [],
-      filter_by_project: [],
-    })
+    const res = await stats(username, apikey,
+      currentStartDate.toISOString().slice(0, 10),
+      currentEndDate.toISOString().slice(0, 10),
+      weekNum
+    )
 
-    if (!res.data.projects || !res.data.languages) throw Error("Undefined, projects or languages values")
-
-    const filterRes: StatWithWeekNum = {
-      weekNumber: weekNum,
-      start_date: res.data.start,
-      end_date: res.data.end,
-      daily_average: res.data.daily_average,
-      human_readable_daily_average: res.data.human_readable_daily_average,
-      total_seconds: res.data.total_seconds,
-      human_readable_total: res.data.human_readable_total,
-      languages: res.data.languages,
-      projects: res.data.projects
-    }
-
-    return filterRes
+    return res
   }))
 
   return yearStatsPerWeek
-}
-
-async function getWeeklyStatsWhile(
-  startDate: Date, endDate: Date,
-  username: string, apikey: string,
-  userCreationDate: string
-) {
-  let lastDate: Date = startDate
-  let weekCout: number = 0
-  let r: StatWithWeekNum[] = []
-  while (true) {
-    weekCout++
-    // starting and ending dates
-    const currentStartDate = getFirstDateOfTheWeekByISOString(lastDate.toISOString())
-    const currentEndDate = new Date(currentStartDate.getTime() + (86400000 * 6)) /*Week in milliseconds plus the starting Date of the week*/
-
-    if (currentEndDate.getTime() >= endDate.getTime()) break
-
-    // updating for next iteration
-    lastDate = new Date(currentStartDate.getTime() + (86400000 * 7))
-
-    // fetching the data in that period of time (week)
-    const res = await getStats(username, apikey, {
-      start_date: currentStartDate.toISOString().slice(0, 10),
-      end_date: currentEndDate.toISOString().slice(0, 10),
-      features: ["projects", "languages"],
-      filter_by_category: [],
-      filter_by_project: [],
-    })
-
-    if (!res.data.projects || !res.data.languages) throw Error("Undefined, projects or languages values")
-
-    const filterRes: StatWithWeekNum = {
-      weekNumber: weekCout,
-      start_date: res.data.start,
-      end_date: res.data.end,
-      daily_average: res.data.daily_average,
-      human_readable_daily_average: res.data.human_readable_daily_average,
-      total_seconds: res.data.total_seconds,
-      human_readable_total: res.data.human_readable_total,
-      languages: res.data.languages,
-      projects: res.data.projects
-    }
-
-    r.push(filterRes)
-  }
-
-  return r
 }

@@ -5,9 +5,8 @@ export const SECURES_KEYS: SECURE_KEYS_TYPE[] = [
   "oauth-token",
 ]
 
-export type STORE_KEYS_TYPE = "usermetadata"
-export const STORE_KEYS: STORE_KEYS_TYPE[] = [
-  "usermetadata"
-]
+export const STORE_KEYS = {
+  usermetadata: "usermetadata"
+}
 
 export const TESTING: boolean = true

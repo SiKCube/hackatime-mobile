@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { getStoredData, killAllStoredData, storeData } from "../storage";
 import { getSecure, killSecures, saveSecure } from "./secure-save";
 import { router } from "expo-router"
+import { STORE_KEYS } from "../../../consts";
 
 interface AuthContextType {
   userToken: string | null,
@@ -143,7 +144,7 @@ export default function AuthContextProvider({ children }: { children: React.Reac
 
         const storedUserToken = await getSecure("oauth-token")
         const storedUserApikey = await getSecure("apikey")
-        const usermetadata = await getStoredData("usermetadata")
+        const usermetadata = await getStoredData(STORE_KEYS.usermetadata)
 
         if (usermetadata && storedUserApikey && storedUserToken) {
           const parseUserMetadata: UserMetadata = JSON.parse(usermetadata)

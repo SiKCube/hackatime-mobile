@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useNetworkState } from "expo-network";
 import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { useAuthCtx } from "../../auth-ctx/auth-ctx-provider";
 import { geTodayStats } from "./getTodayStats";
@@ -108,7 +107,6 @@ export default function StatsCtxProvider({ children }: { children: React.ReactNo
 
   // require data
   const { user, userApikey } = useAuthCtx()
-  const network = useNetworkState()
 
   const getCtxStats = async (
     username: string, apikey: string,

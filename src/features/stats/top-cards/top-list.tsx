@@ -18,19 +18,25 @@ export default function TopList() {
   useEffect(() => {
     if (totalStats) {
       const totaltime = totalStats.total_seconds
-      const topleng = totalStats.languages.reduce((previous, current) => {
-        if (previous.total_seconds > current.total_seconds) return previous
-        return current
-      })
-      const topProject = totalStats.projects.reduce((prv, current) => {
-        if (prv.total_seconds > current.total_seconds) return prv
-        return current
-      })
+      const topleng = totalStats.languages.length > 0 ? 
+        totalStats.languages.reduce((previous, current) => {
+          if (previous.total_seconds > current.total_seconds) return previous
+          return current
+        }).name
+        :
+        "None"
+      const topProject = totalStats.projects.length > 0 ?
+        totalStats.projects.reduce((prv, current) => {
+          if (prv.total_seconds > current.total_seconds) return prv
+          return current
+        }).name
+        :
+        "None"
 
       setTops({
         total_time_secs: totaltime,
-        top_language: topleng.name,
-        top_project: topProject.name
+        top_language: topleng,
+        top_project: topProject
       })
     }
   }, [totalStats])
