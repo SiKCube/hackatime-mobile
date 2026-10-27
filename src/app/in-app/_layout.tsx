@@ -53,23 +53,13 @@ export default function AppTabLayout() {
             }}
           />
           <Tabs.Screen
-            name="programs"
+            name="settings"
             options={{
-              title: "Programs",
+              title: "Settings",
               tabBarIcon: ({ focused, color }) => focused ?
-                <Ionicons name="calendar-clear" size={24} color={color} />
+                <Ionicons name="settings" size={24} color={color} />
                 :
-                <Ionicons name="calendar-clear-outline" size={24} color={color} />
-            }}
-          />
-          <Tabs.Screen
-            name="my-mail"
-            options={{
-              title: "Mails",
-              tabBarIcon: ({ focused, color }) => focused ?
-                <Ionicons name="mail" size={24} color={color} />
-                :
-                <Ionicons name="mail-outline" size={24} color={color} />
+                <Ionicons name="settings-outline" size={24} color={color} />
             }}
           />
         </Tabs>

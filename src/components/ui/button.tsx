@@ -6,7 +6,7 @@ interface Props {
   children?: React.ReactNode
   text?: string
   onClick?: Dispatch<any>
-  type: "primary" | "secondary"
+  type: "primary" | "secondary" | "error"
   disable?: boolean
 }
 
@@ -26,7 +26,7 @@ export default function StyledButton({ children, onClick, text, type, disable }:
         gap: 5,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: type === "primary" ? THEME.primary : THEME.secondary
+        backgroundColor: type === "primary" ? THEME.primary : type === "secondary" ? THEME.secondary : THEME.danger
       }}>
         {children}
         {
