@@ -1,6 +1,5 @@
-import { Dispatch, useState } from "react";
-import { KeyboardTypeOptions, Text, TextInput, View } from "react-native";
-import StyledText from "./text";
+import { Dispatch } from "react";
+import { KeyboardTypeOptions, TextInput, View } from "react-native";
 import { THEME } from "../theme";
 
 interface Props {

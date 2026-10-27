@@ -2,6 +2,7 @@ import StyledText from "@/components/ui/text";
 import { ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GoalProgress from "@/features/goal/goal-progress";
+import ReminderList from "@/features/reminders/reminder-list";
 
 export default function StreakScreen() {
   return (
@@ -13,6 +14,7 @@ export default function StreakScreen() {
           Goals
         </StyledText>
         <GoalProgress />
+        <ReminderList />
       </ScrollView>
     </SafeAreaView>
   )

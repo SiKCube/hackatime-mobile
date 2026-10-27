@@ -45,7 +45,7 @@ export default function AppTabLayout() {
           <Tabs.Screen
             name="streak"
             options={{
-              title: "Racha",
+              title: "Goals",
               tabBarIcon: ({ focused, color }) => focused ?
                 <Ionicons name="flame" size={24} color={color} />
                 :
