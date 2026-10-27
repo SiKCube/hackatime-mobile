@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { THEME } from "./theme";
 
 interface Props {
@@ -14,6 +14,13 @@ export default function LoadingSkeleton({ width, height }: Props) {
       borderColor: THEME.darkless,
       borderRadius: 16,
       borderWidth: 1,
-    }} />
+      justifyContent: "center",
+      alignContent: "center"
+    }}>
+      <ActivityIndicator
+        size={"large"}
+        color={THEME.primary}
+      />
+    </View>
   )
 }

@@ -6,6 +6,7 @@ import StyledTextLink from "@/components/ui/text-link"
 import { Image } from "expo-image"
 import { View } from "react-native"
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider"
+import LoadingSpinner from "@/components/loading-spinner"
 
 export default function LoginCard() {
   const { startLogin, loading, error } = useAuthCtx()
@@ -36,7 +37,9 @@ export default function LoginCard() {
               type="primary"
               onClick={startLogin}
               disable={loading}
-            />
+            >
+              {loading && <LoadingSpinner size={"small"} />}
+            </StyledButton>
           </View>
         </View>
       </StyledCard>

@@ -5,6 +5,7 @@ import { ScrollView, Text, View } from "react-native";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
 import { gethoursAndMinutes } from "../stats/get-stats";
 import ProjectCard, { Project } from "./project-card";
+import LoadingSkeleton from "@/components/loading-skeleton";
 
 interface ProjectsRequest {
   projects: ProjectsData[];
@@ -86,7 +87,6 @@ export default function ProjectsList() {
       <View>
         <StyledText size={20} weight="bold">Projects</StyledText>
         <StyledText>{error}</StyledText>
-        {/* <TextInput placeholder="Search" /> */}
       </View>
       {
         !loading && projectsList ?
@@ -96,29 +96,31 @@ export default function ProjectsList() {
             coding across active projects
           </StyledText>
           :
-          null
+          <LoadingSkeleton
+            height={50}
+          />
       }
       {
-        loading ?
-          <Text>Loading...</Text>
+        !loading && projectsList ?
+          projectsList.map((prj, index) => {
+            return (
+              <ProjectCard
+                key={index}
+                name={prj.name}
+                archived={prj.archived}
+                languages={prj.languages}
+                repo_url={prj.repo_url}
+                total_seconds={prj.total_seconds}
+                last_heartbeat={prj.last_heartbeat}
+              />
+            )
+          })
           :
-          projectsList ?
-            projectsList.map((prj, index) => {
-              return (
-                <ProjectCard
-                  key={index}
-                  name={prj.name}
-                  archived={prj.archived}
-                  languages={prj.languages}
-                  repo_url={prj.repo_url}
-                  total_seconds={prj.total_seconds}
-                  last_heartbeat={prj.last_heartbeat}
-                />
-              )
-            })
-            :
-            <Text>No projects</Text>
-      }
+          Array.from({ length: 3 }, (_, i) => i).map((v) => <LoadingSkeleton
+            height={150}
+            key={v}
+          />)
+}
       <View style={{ height: 150 }} />
     </ScrollView>
   )
