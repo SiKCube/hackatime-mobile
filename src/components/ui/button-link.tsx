@@ -1,4 +1,3 @@
-import { Dispatch } from "react"
 import { Text, View } from "react-native"
 import { THEME } from "../theme"
 import { Link, Href } from "expo-router"
