@@ -7,6 +7,7 @@ export default function ThemeList() {
       {
         Object.values(THEMES).map((theme, i) => <ThemeCard
           {...theme}
+          key={i}
         />)
       }
     </>
