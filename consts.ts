@@ -7,7 +7,8 @@ export const SECURES_KEYS: SECURE_KEYS_TYPE[] = [
 
 export const STORE_KEYS = {
   usermetadata: "usermetadata",
-  notis: "notis"
+  notis: "notis",
+  theme: "theme"
 }
 
 export const TESTING: boolean = true

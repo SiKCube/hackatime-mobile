@@ -1,12 +1,11 @@
 import Alert from "@/components/alert";
 import LoadingSkeleton from "@/components/loading-skeleton";
-import { THEME } from "@/components/theme";
 import StyledCard from "@/components/ui/card";
 import StyledText from "@/components/ui/text";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
+import { useTheme } from "../theme/context/theme-ctx-provider";
 import { gethoursAndMinutes, getStats } from "./get-stats";
 
 export interface MainRequest {
@@ -44,6 +43,7 @@ interface Props {
 
 export default function IaVsHumanChart({ start_date, end_date }: Props) {
   const { user, userApikey } = useAuthCtx()
+  const { themeData } = useTheme()
 
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
@@ -97,13 +97,13 @@ export default function IaVsHumanChart({ start_date, end_date }: Props) {
         !loading && chartData ?
           <View style={{ marginTop: 20 }}>
             <View style={{ width: "100%", height: 20, flexDirection: "row" }}>
-              <View style={{ width: `${chartData[1].porcentage}%`, height: 20, backgroundColor: THEME.primary, borderTopStartRadius: 100, borderBottomStartRadius: 100 }} />
-              <View style={{ width: `${chartData[0].porcentage}%`, height: 20, backgroundColor: THEME.blue, borderTopEndRadius: 100, borderBottomEndRadius: 100 }} />
+              <View style={{ width: `${chartData[1].porcentage}%`, height: 20, backgroundColor: themeData.primary, borderTopStartRadius: 100, borderBottomStartRadius: 100 }} />
+              <View style={{ width: `${chartData[0].porcentage}%`, height: 20, backgroundColor: themeData.blue, borderTopEndRadius: 100, borderBottomEndRadius: 100 }} />
             </View>
             <View style={{ flexDirection: "row", justifyContent: "space-between", padding: 10 }}>
               <View style={{ flexDirection: "column", justifyContent: "flex-start" }}>
                 <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 10 }}>
-                  <View style={{ width: 10, height: 10, backgroundColor: THEME.primary, borderRadius: 100 }} />
+                  <View style={{ width: 10, height: 10, backgroundColor: themeData.primary, borderRadius: 100 }} />
                   <StyledText size={13} type="seconday">IA coding</StyledText>
                 </View>
                 <StyledText weight="bold" size={20}>{chartData[1].porcentage}%</StyledText>
@@ -112,7 +112,7 @@ export default function IaVsHumanChart({ start_date, end_date }: Props) {
               <View>
                 <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 10 }}>
                   <StyledText size={13} type="seconday">Human coding</StyledText>
-                  <View style={{ width: 10, height: 10, backgroundColor: THEME.blue, borderRadius: 100 }} />
+                  <View style={{ width: 10, height: 10, backgroundColor: themeData.blue, borderRadius: 100 }} />
                 </View>
                 <StyledText weight="bold" size={20}>{chartData[0].porcentage}%</StyledText>
                 <StyledText size={13} type="seconday">{chartData[0].texttime}</StyledText>

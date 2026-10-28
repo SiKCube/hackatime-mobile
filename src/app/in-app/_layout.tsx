@@ -1,25 +1,27 @@
-import { neon, THEME } from "@/components/theme";
 import StatsCtxProvider from "@/features/stats/context/statsCtxProvider";
+import { useTheme } from "@/features/theme/context/theme-ctx-provider";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { ChartKitProvider } from "react-native-chart-kit/v2";
 
 export default function AppTabLayout() {
+  const { themeData, chartTheme } = useTheme()
+
   return (
-    <ChartKitProvider preset={"neon"} mode="dark" presets={{ neon }}>
+    <ChartKitProvider preset={"chartTheme"} presets={{ chartTheme }}>
       <StatsCtxProvider>
         <Tabs
           screenOptions={{
             headerShown: false,
             tabBarStyle: {
-              backgroundColor: THEME.darkless,
+              backgroundColor: themeData.darkless,
               borderWidth: 0
             },
             sceneStyle: {
-              backgroundColor: THEME.darker,
+              backgroundColor: themeData.darker,
             },
-            tabBarActiveTintColor: THEME.primary,
-            tabBarInactiveTintColor: THEME.secondary
+            tabBarActiveTintColor: themeData.primary,
+            tabBarInactiveTintColor: themeData.secondary
           }}
         >
           <Tabs.Screen

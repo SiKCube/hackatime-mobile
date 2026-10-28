@@ -1,6 +1,6 @@
+import { useTheme } from "@/features/theme/context/theme-ctx-provider"
 import { Dispatch } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
-import { THEME } from "../theme"
 
 interface Props {
   children?: React.ReactNode
@@ -11,6 +11,8 @@ interface Props {
 }
 
 export default function StyledButton({ children, onClick, text, type, disable }: Props) {
+  const { themeData } = useTheme()
+
   return (
     <TouchableOpacity
       onPress={onClick}
@@ -26,13 +28,13 @@ export default function StyledButton({ children, onClick, text, type, disable }:
         gap: 5,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: type === "primary" ? THEME.primary : type === "secondary" ? THEME.secondary : THEME.danger
+        backgroundColor: type === "primary" ? themeData.primary : type === "secondary" ? themeData.secondary : themeData.danger
       }}>
         {children}
         {
           text && <Text style={{
             fontWeight: "bold",
-            color: type === "primary" ? THEME.on_primary : THEME.dark
+            color: type === "primary" ? themeData.on_primary : themeData.dark
           }}>{text}</Text>
         }
       </View>

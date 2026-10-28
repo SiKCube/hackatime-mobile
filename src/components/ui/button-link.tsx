@@ -1,6 +1,6 @@
+import { useTheme } from "@/features/theme/context/theme-ctx-provider"
+import { Href, Link } from "expo-router"
 import { Text, View } from "react-native"
-import { THEME } from "../theme"
-import { Link, Href } from "expo-router"
 
 interface Props {
   children?: React.ReactNode
@@ -11,6 +11,8 @@ interface Props {
 }
 
 export default function StyledLinkButton({ children, href, text, type, disable }: Props) {
+  const { themeData } = useTheme()
+
   return (
     <Link
       href={href}
@@ -26,13 +28,13 @@ export default function StyledLinkButton({ children, href, text, type, disable }
         gap: 5,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: type === "primary" ? THEME.primary : THEME.secondary
+        backgroundColor: type === "primary" ? themeData.primary : themeData.secondary
       }}>
         {children}
         {
           text && <Text style={{
             fontWeight: "bold",
-            color: type === "primary" ? THEME.on_primary : THEME.dark
+            color: type === "primary" ? themeData.on_primary : themeData.dark
           }}>{text}</Text>
         }
       </View>

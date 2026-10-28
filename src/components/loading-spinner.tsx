@@ -1,15 +1,17 @@
+import { useTheme } from "@/features/theme/context/theme-ctx-provider";
 import { ActivityIndicator } from "react-native";
-import { THEME } from "./theme";
 
 interface Props {
   size: "small" | "large" | number
 }
 
 export default function LoadingSpinner({ size }: Props) {
+  const { themeData } = useTheme()
+
   return (
     <ActivityIndicator
       size={size}
-      color={THEME.on_primary}
+      color={themeData.on_primary}
     />
   )
 }

@@ -1,20 +1,22 @@
-import { THEME } from "@/components/theme";
 import ReminderProvider from "@/features/reminders/context/reminder-ctx-provider";
+import { useTheme } from "@/features/theme/context/theme-ctx-provider";
 import { Stack } from "expo-router";
 
 export default function ProjectsLayout() {
+  const { themeData } = useTheme()
+
   return (
     <ReminderProvider>
       <Stack screenOptions={{
         contentStyle: {
-          backgroundColor: THEME.darker
+          backgroundColor: themeData.darker
         },
         headerStyle: {
-          backgroundColor: THEME.darkless,
+          backgroundColor: themeData.darkless,
         }
       }}>
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="new-reminder" options={{ headerTitle: "New Reminder", headerTintColor: THEME.surface_content }} />
+        <Stack.Screen name="new-reminder" options={{ headerTitle: "New Reminder", headerTintColor: themeData.surface_content }} />
       </Stack>
     </ReminderProvider>
   )

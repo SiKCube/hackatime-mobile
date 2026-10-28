@@ -1,6 +1,5 @@
 import Alert from "@/components/alert";
 import LoadingSkeleton from "@/components/loading-skeleton";
-import { THEME } from "@/components/theme";
 import StyledCard from "@/components/ui/card";
 import StyledText from "@/components/ui/text";
 import axios from "axios";
@@ -8,6 +7,7 @@ import { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import Svg, { Rect } from "react-native-svg";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
+import { useTheme } from "../theme/context/theme-ctx-provider";
 import { gethoursAndMinutes } from "./get-stats";
 
 export interface SpansRequest {
@@ -51,7 +51,8 @@ export default function RhythmChart({ start_date, end_date, projects }: Props) {
   const [error, setError] = useState<string | null>(null)
 
   const { user, userApikey } = useAuthCtx()
-  
+  const { themeData } = useTheme()
+
   const getSpans = async (username: string, apikey: string) => {
     try {
       setLoading(true)
@@ -127,7 +128,7 @@ export default function RhythmChart({ start_date, end_date, projects }: Props) {
               <StyledText type="seconday" size={15}>
                 {selectedHour.day}, {selectedHour.cellIndex}:00-{selectedHour.cellIndex + 1}:00
               </StyledText>
-              <View style={{ width: 4, height: 4, backgroundColor: THEME.secondary, borderRadius: 100 }} />
+              <View style={{ width: 4, height: 4, backgroundColor: themeData.secondary, borderRadius: 100 }} />
               <StyledText type="seconday" size={15}>
                 {gethoursAndMinutes(selectedHour.hour)}
               </StyledText>
@@ -149,7 +150,7 @@ export default function RhythmChart({ start_date, end_date, projects }: Props) {
                     <Text style={{ width: 35, opacity: 0 }}>Hour</Text>
                     <View style={{ width: (CELL_SIZE + GAP) * 24, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                       {
-                        TIMES.map((v) => <Text style={{ fontSize: 10, opacity: 0.7, color: THEME.secondary }} key={v}>{v}</Text>)
+                        TIMES.map((v) => <Text style={{ fontSize: 10, opacity: 0.7, color: themeData.secondary }} key={v}>{v}</Text>)
                       }
                     </View>
                   </View>
@@ -157,7 +158,7 @@ export default function RhythmChart({ start_date, end_date, projects }: Props) {
                     chartData.map((dayData, dayDataIndex) => {
                       return (
                         <View key={dayDataIndex} style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
-                          <Text style={{ width: 35, opacity: 0.7, fontSize: 12, color: THEME.secondary }}>
+                          <Text style={{ width: 35, opacity: 0.7, fontSize: 12, color: themeData.secondary }}>
                             {dayData.dayString.slice(0, 3)}
                           </Text>
                           <Svg height={CELL_SIZE} width={(CELL_SIZE + GAP) * 24}>
@@ -186,11 +187,11 @@ export default function RhythmChart({ start_date, end_date, projects }: Props) {
                                       :
                                       0.1
                                     }
-                                    stroke={THEME.primary}
+                                    stroke={themeData.primary}
                                     strokeWidth={selectedHour?.cellId === cellid ? 1.5 : 0}
                                     strokeOpacity={1}
                                     fill={Number((value / 3600).toFixed(2)) >= 0.01 ?
-                                      THEME.primary
+                                      themeData.primary
                                       :
                                       "gray"}
                                   />

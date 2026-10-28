@@ -1,15 +1,15 @@
 import Alert from "@/components/alert";
 import LoadingSkeleton from "@/components/loading-skeleton";
-import { THEME } from "@/components/theme";
 import StyledCard from "@/components/ui/card";
 import StyledText from "@/components/ui/text";
+import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 import Svg, { Rect } from "react-native-svg";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
 import { gethoursAndMinutes } from "../stats/get-stats";
-import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "../theme/context/theme-ctx-provider";
 
 export interface GoalRequest {
   data: Data;
@@ -46,6 +46,8 @@ export default function GoalProgress() {
   const [error, setError] = useState<string | null>(null)
 
   const { user, userApikey } = useAuthCtx()
+
+  const { themeData } = useTheme()
 
   useEffect(() => {
     const getGoal = async (userid: string, apikey: string) => {
@@ -106,7 +108,7 @@ export default function GoalProgress() {
                 <Ionicons
                   name={goal.goal.complete ? "checkmark-circle" : "time"}
                   size={30}
-                  color={goal.goal.complete ? THEME.success : THEME.secondary}
+                  color={goal.goal.complete ? themeData.success : themeData.secondary}
                 />
               </View>
             </View>
@@ -118,7 +120,7 @@ export default function GoalProgress() {
                 ry="5"
                 width={"100%"}
                 height={10}
-                fill={THEME.surface_200}
+                fill={themeData.surface_200}
               />
               <Rect
                 x="0"
@@ -127,7 +129,7 @@ export default function GoalProgress() {
                 ry="5"
                 width={`${goal.goal.completion_percent}%`}
                 height={10}
-                fill={goal.goal.complete ? THEME.success : THEME.primary}
+                fill={goal.goal.complete ? themeData.success : themeData.primary}
               />
             </Svg>
           </View>

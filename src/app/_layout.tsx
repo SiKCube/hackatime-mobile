@@ -1,13 +1,15 @@
-import { THEME } from "@/components/theme";
 import AuthContextProvider, { useAuthCtx } from "@/features/auth-ctx/auth-ctx-provider";
 import { SplashScreenController } from "@/features/auth-ctx/splash-screen-controler";
+import ThemeProvider, { useTheme } from "@/features/theme/context/theme-ctx-provider";
 import { Stack } from "expo-router";
 
 export default function RootLayout() {
   return (
     <AuthContextProvider>
-      <RootNavigator />
-      <SplashScreenController />
+      <ThemeProvider>
+        <RootNavigator />
+        <SplashScreenController />
+      </ThemeProvider>
     </AuthContextProvider>
   );
 }
@@ -15,13 +17,14 @@ export default function RootLayout() {
 function RootNavigator() {
   const { user, userApikey, userToken } = useAuthCtx()
   const islogin = (user && userApikey && userToken) ? true : false
+  const { themeData } = useTheme()
 
   return (
     <Stack
       screenOptions={{
         headerShown: false,
         contentStyle: {
-          backgroundColor: THEME.darker
+          backgroundColor: themeData.darker
         }
       }}
     >

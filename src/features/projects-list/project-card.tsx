@@ -1,4 +1,3 @@
-import { THEME } from "@/components/theme";
 import StyledButton from "@/components/ui/button";
 import StyledLinkButton from "@/components/ui/button-link";
 import StyledCard from "@/components/ui/card";
@@ -6,6 +5,7 @@ import StyledText from "@/components/ui/text";
 import { Ionicons } from "@expo/vector-icons";
 import { Linking, View } from "react-native";
 import { gethoursAndMinutes } from "../stats/get-stats";
+import { useTheme } from "../theme/context/theme-ctx-provider";
 
 export interface Project {
   name: string;
@@ -17,6 +17,8 @@ export interface Project {
 }
 
 export default function ProjectCard({ name, archived, languages, total_seconds, repo_url, last_heartbeat }: Project) {
+  const { themeData } = useTheme()
+
   return (
     <StyledCard>
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 5, flexWrap: "wrap" }}>
@@ -30,7 +32,7 @@ export default function ProjectCard({ name, archived, languages, total_seconds, 
           null
       }
       <View style={{ flexDirection: "row", justifyContent: "flex-start", gap: 3, alignItems: "center" }}>
-        <Ionicons name="time" size={20} color={THEME.primary} />
+        <Ionicons name="time" size={20} color={themeData.primary} />
         <StyledText size={13} type="seconday">
           Last heartbeat:
           <StyledText type="primary" size={13}> {gethoursAndMinutes((Date.now() - last_heartbeat.getTime()) / 1000)} </StyledText>

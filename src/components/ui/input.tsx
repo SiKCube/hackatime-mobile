@@ -1,6 +1,5 @@
 import { Dispatch } from "react";
 import { KeyboardTypeOptions, TextInput, View } from "react-native";
-import { THEME } from "../theme";
 
 interface Props {
   placeholder: string
@@ -9,20 +8,20 @@ interface Props {
   keyboardType: KeyboardTypeOptions
 }
 
-export default function StyledInput({ keyboardType, placeholder, change, setChange }: Props) { 
+export default function StyledInput({ keyboardType, placeholder, change, setChange }: Props) {
   return (
     <View>
       <TextInput
         style={{
           borderWidth: 1,
-          borderColor: THEME.surface_300,
-          backgroundColor: THEME.input,
+          borderColor: themeData.surface_300,
+          backgroundColor: themeData.input,
           borderRadius: 6,
           paddingTop: 8,
           paddingBottom: 8,
           paddingLeft: 16,
           paddingRight: 16,
-          color: THEME.surface_content,
+          color: themeData.surface_content,
         }}
         placeholder={placeholder}
         value={change}

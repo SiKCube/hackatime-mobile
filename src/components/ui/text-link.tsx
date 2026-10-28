@@ -1,4 +1,4 @@
-import { THEME } from "../theme"
+import { useTheme } from "@/features/theme/context/theme-ctx-provider"
 import { Href, Link } from "expo-router"
 
 interface Props {
@@ -10,26 +10,28 @@ interface Props {
 }
 
 export default function StyledTextLink({ children, size, weight, type, href }: Props) {
+  const { themeData } = useTheme()
+
   return (
     <Link
       href={href}
       style={{
-      fontSize: size ?? 15,
-      fontWeight: weight,
-      color: type === "primary" ?
-        THEME.primary
-        :
-        type === "seconday" ?
-          THEME.secondary
+        fontSize: size ?? 15,
+        fontWeight: weight,
+        color: type === "primary" ?
+          themeData.primary
           :
-          type === "success" ?
-            THEME.success
+          type === "seconday" ?
+            themeData.secondary
             :
-            type === "error" ?
-              THEME.danger
+            type === "success" ?
+              themeData.success
               :
-              THEME.surface_content
-    }}>
+              type === "error" ?
+                themeData.danger
+                :
+                themeData.surface_content
+      }}>
       {children}
     </Link>
   )

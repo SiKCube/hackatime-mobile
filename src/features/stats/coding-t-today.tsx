@@ -1,12 +1,12 @@
 import Alert from "@/components/alert";
 import LoadingSkeleton from "@/components/loading-skeleton";
-import { THEME } from "@/components/theme";
 import StyledCard from "@/components/ui/card";
 import StyledText from "@/components/ui/text";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { ProgressRing } from "react-native-chart-kit/v2";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
+import { useTheme } from "../theme/context/theme-ctx-provider";
 import { gethoursAndMinutes, getStats } from "./get-stats";
 
 export interface SpansRequest {
@@ -34,6 +34,7 @@ interface Props {
 
 export default function CodingTimeTodayChart({ start_date, end_date, projects, no_ia }: Props) {
   const { user, userApikey } = useAuthCtx()
+  const { themeData } = useTheme()
 
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
@@ -108,7 +109,7 @@ export default function CodingTimeTodayChart({ start_date, end_date, projects, n
               />
               {
                 Math.floor(chartData.score * 100) ?
-                  <Text style={{ color: THEME.danger, fontWeight: "bold" }}>
+                  <Text style={{ color: themeData.danger, fontWeight: "bold" }}>
                     {100 - Math.floor(chartData.score * 100)}% below usual daily total
                   </Text>
                   :
@@ -117,7 +118,7 @@ export default function CodingTimeTodayChart({ start_date, end_date, projects, n
             </View>
             <View style={{ flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center" }}>
               <StyledText type="seconday" size={17}>Today {gethoursAndMinutes(chartData.today)}</StyledText>
-              <View style={{ width: 4, height: 4, backgroundColor: THEME.secondary, borderRadius: 100 }} />
+              <View style={{ width: 4, height: 4, backgroundColor: themeData.secondary, borderRadius: 100 }} />
               <StyledText type="seconday" size={15}>Usual {gethoursAndMinutes(chartData.promedio)}</StyledText>
             </View>
           </View>

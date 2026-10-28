@@ -1,5 +1,5 @@
+import { useTheme } from "@/features/theme/context/theme-ctx-provider"
 import { DimensionValue, StyleSheet, View } from "react-native"
-import { THEME } from "../theme"
 
 interface Props {
   children: React.ReactNode
@@ -8,11 +8,13 @@ interface Props {
 }
 
 export default function StyledCard({ children, important, width }: Props) {
+  const { themeData } = useTheme()
+
   return (
     <View style={{
       ...CardStyle.card,
-      backgroundColor: important ? `${THEME.primary}1a` : `${THEME.surface}`,
-      borderColor: important ? THEME.primary : THEME.surface_200,
+      backgroundColor: important ? `${themeData.primary}1a` : `${themeData.surface}`,
+      borderColor: important ? themeData.primary : themeData.surface_200,
       width: width
     }}>
       {children}

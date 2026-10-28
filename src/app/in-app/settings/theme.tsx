@@ -1,10 +1,10 @@
-import StyledText from "@/components/ui/text";
-import { View } from "react-native";
+import ThemeList from "@/features/theme/themeList";
+import { ScrollView } from "react-native";
 
 export default function Themes() {
   return (
-    <View>
-      <StyledText>Bruh themes XD</StyledText>
-    </View>
+    <ScrollView contentContainerStyle={{ padding: 20, gap: 20 }}>
+      <ThemeList />
+    </ScrollView>
   )
 }

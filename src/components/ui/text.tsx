@@ -1,5 +1,5 @@
+import { useTheme } from "@/features/theme/context/theme-ctx-provider"
 import { Text } from "react-native"
-import { THEME } from "../theme"
 
 interface Props {
   children: React.ReactNode
@@ -10,24 +10,26 @@ interface Props {
 }
 
 export default function StyledText({ children, size, weight, type, textAling }: Props) {
+  const { themeData } = useTheme()
+
   return (
     <Text style={{
       fontSize: size ?? 15,
       fontWeight: weight,
       textAlign: textAling ? textAling : "auto",
       color: type === "primary" ?
-        THEME.primary
+        themeData.primary
         :
         type === "seconday" ?
-          THEME.secondary
+          themeData.secondary
           :
           type === "success" ?
-            THEME.success
+            themeData.success
             :
             type === "error" ?
-              THEME.danger
+              themeData.danger
               :
-              THEME.surface_content
+              themeData.surface_content
     }}>
       {children}
     </Text>

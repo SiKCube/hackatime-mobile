@@ -1,6 +1,6 @@
+import { useTheme } from "@/features/theme/context/theme-ctx-provider";
 import { Ionicons } from "@expo/vector-icons";
 import { Text, View } from "react-native";
-import { THEME } from "./theme";
 
 interface Props {
   msg: string | null
@@ -8,6 +8,8 @@ interface Props {
 }
 
 export default function Alert({ msg, type }: Props) {
+  const { themeData } = useTheme()
+
   return (
     <>
       {
@@ -17,8 +19,8 @@ export default function Alert({ msg, type }: Props) {
           gap: 5,
           padding: 10,
           borderWidth: 1,
-          borderColor: type === "error" ? `${THEME.danger}` : type === "success" ? THEME.success : THEME.primary,
-          backgroundColor: type === "error" ? `${THEME.danger}1a` : type === 'success' ? `${THEME.success}1a` : `${THEME.primary}1a`,
+          borderColor: type === "error" ? `${themeData.danger}` : type === "success" ? themeData.success : themeData.primary,
+          backgroundColor: type === "error" ? `${themeData.danger}1a` : type === 'success' ? `${themeData.success}1a` : `${themeData.primary}1a`,
           borderRadius: 8,
         }}>
           <View style={{ flexDirection: "row", gap: 3, justifyContent: "flex-start", alignItems: "center" }}>
@@ -30,22 +32,22 @@ export default function Alert({ msg, type }: Props) {
                   "checkbox"
                 }
                 color={type === "error" ?
-                  THEME.danger
+                  themeData.danger
                   :
-                  THEME.success}
+                  themeData.success}
                 size={17} />
             }
-              {
-                type !== "wow" && <Text style={{
-                  color: type === "error" ? THEME.danger : THEME.success,
-                  fontWeight: "bold",
-                }}>
-                  {type}
-                </Text>
+            {
+              type !== "wow" && <Text style={{
+                color: type === "error" ? themeData.danger : themeData.success,
+                fontWeight: "bold",
+              }}>
+                {type}
+              </Text>
             }
           </View>
           <Text style={{
-            color: type === "error" ? THEME.danger : type === "success" ? THEME.success : THEME.primary,
+            color: type === "error" ? themeData.danger : type === "success" ? themeData.success : themeData.primary,
           }}>
             {msg}
           </Text>
