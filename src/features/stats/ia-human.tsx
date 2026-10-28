@@ -7,6 +7,7 @@ import { View } from "react-native";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
 import { useTheme } from "../theme/context/theme-ctx-provider";
 import { gethoursAndMinutes, getStats } from "./get-stats";
+import Svg, { Rect } from "react-native-svg";
 
 export interface MainRequest {
   total_seconds: number
@@ -96,10 +97,28 @@ export default function IaVsHumanChart({ start_date, end_date }: Props) {
       {
         !loading && chartData ?
           <View style={{ marginTop: 20 }}>
-            <View style={{ width: "100%", height: 20, flexDirection: "row" }}>
+            <View style={{ width: "100%", height: 20, borderRadius: 100, overflow: "hidden" }}>
+              <Svg width={"100%"} height={20}>
+                <Rect
+                  x={`${chartData[1].porcentage}%`}
+                  y={0}
+                  width={`${chartData[0].porcentage}%`}
+                  height={20}
+                  fill={themeData.blue}
+                />
+                <Rect
+                  x={0}
+                  y={0}
+                  width={`${chartData[1].porcentage}%`}
+                  height={20}
+                  fill={themeData.primary}
+                />
+              </Svg>
+            </View>
+            {/* <View style={{ width: "100%", height: 20, flexDirection: "row" }}>
               <View style={{ width: `${chartData[1].porcentage}%`, height: 20, backgroundColor: themeData.primary, borderTopStartRadius: 100, borderBottomStartRadius: 100 }} />
               <View style={{ width: `${chartData[0].porcentage}%`, height: 20, backgroundColor: themeData.blue, borderTopEndRadius: 100, borderBottomEndRadius: 100 }} />
-            </View>
+            </View> */}
             <View style={{ flexDirection: "row", justifyContent: "space-between", padding: 10 }}>
               <View style={{ flexDirection: "column", justifyContent: "flex-start" }}>
                 <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 10 }}>

@@ -9,7 +9,7 @@ import WeeklyProjectsTimeline from "@/features/stats/projects-timeline/weekly-pr
 import RhythmChart from "@/features/stats/rhythm";
 import TopList from "@/features/stats/top-cards/top-list";
 import YearHeatMap from "@/features/stats/year-heatmap";
-import { ScrollView } from "react-native";
+import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
@@ -47,6 +47,7 @@ export default function HomeScreen() {
           end_date={endDate}
         />
         <YearHeatMap />
+        <View style={{ height: 100 }} />
       </ScrollView>
     </SafeAreaView>
   )
