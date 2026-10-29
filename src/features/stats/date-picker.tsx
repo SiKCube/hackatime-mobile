@@ -1,5 +1,4 @@
 import OptionBtn from '@/components/ui/option-btn';
-import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { useStatsCtx } from './context/statsCtxProvider';
 
@@ -10,7 +9,7 @@ interface Option {
   onClick: () => [Date, Date]
 }
 
-const getFirstDateOfTheWeekByISOString = (isoString: string, firstDayofTheWeek: number = 1): Date => {
+export const getFirstDateOfTheWeekByISOString = (isoString: string, firstDayofTheWeek: number = 1): Date => {
   const date = new Date(isoString.slice(0, 10))
 
   const dayNumber = date.getUTCDay() || 7
@@ -33,7 +32,7 @@ const OPTIONS: Option[] = [
     text: "This year", icon: "flag", key: "thisyear",
     onClick: () => {
       const start = new Date(new Date().getFullYear(), 0, 1, 1)
-      const end = new Date(new Date(new Date().getFullYear() + 1, 0, 1).getTime() - 24 * 60 * 60 * 1000)
+      const end = new Date()
 
       return [start, end]
     }
@@ -110,9 +109,12 @@ export default function DateRangePickerDialogExample() {
     startDate,
     setStartDate,
     endDate,
-    setEndDate
+    setEndDate,
+    selectedPeriod,
+    setSelectedPeriod,
+    selectedPeriodName,
+    setSelectedPeriodName
   } = useStatsCtx()
-  const [selected, setSelected] = useState<string>("thisyear")
 
   return (
     <View style={{ margin: 10 }}>
@@ -124,13 +126,15 @@ export default function DateRangePickerDialogExample() {
             key={i}
             selectedKey={opt.key}
             onClick={() => {
-              setSelected(opt.key)
               const [start, end] = opt.onClick()
+              
+              setSelectedPeriod(opt.key)
+              setSelectedPeriodName(opt.text)
 
               setStartDate(start)
               setEndDate(end)
             }}
-            selected={selected}
+            selected={selectedPeriod}
             disable={loading}
           />)
         }

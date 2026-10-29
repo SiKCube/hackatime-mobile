@@ -7,6 +7,7 @@ import { Text, View } from "react-native";
 import { ProgressRing } from "react-native-chart-kit/v2";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
 import { useTheme } from "../theme/context/theme-ctx-provider";
+import { getFirstDateOfTheWeekByISOString } from "./date-picker";
 import { gethoursAndMinutes, getStats } from "./get-stats";
 
 export interface SpansRequest {
@@ -26,13 +27,11 @@ interface ChartData {
 }
 
 interface Props {
-  start_date: Date,
-  end_date: Date,
   projects: string[],
   no_ia?: boolean
 }
 
-export default function CodingTimeTodayChart({ start_date, end_date, projects, no_ia }: Props) {
+export default function CodingTimeTodayChart({ projects, no_ia }: Props) {
   const { user, userApikey } = useAuthCtx()
   const { themeData } = useTheme()
 
@@ -45,18 +44,20 @@ export default function CodingTimeTodayChart({ start_date, end_date, projects, n
       setLoading(true)
       setError(null)
 
+      const x = new Date()
+      const today = new Date(x.getFullYear(), x.getMonth(), x.getDate())
+      const firstDateOfTheWeek = getFirstDateOfTheWeekByISOString(today.toISOString())
+      const todayEnd = new Date(today.getTime() + 23 * 60 * 60 * 1000)
+
       const { data } = await getStats(username, apikey, {
         features: [],
         filter_by_category: [],
         filter_by_project: [],
-        start_date,
-        end_date,
+        start_date: firstDateOfTheWeek.toISOString(),
+        end_date: todayEnd.toISOString(),
         no_ia
       })
 
-      const x = new Date()
-      const today = new Date(x.getFullYear(), x.getMonth(), x.getDate())
-      const todayEnd = new Date(today.getTime() + 23 * 60 * 60 * 1000)
 
       const todayData = await getStats(username, apikey, {
         features: [],
@@ -66,6 +67,8 @@ export default function CodingTimeTodayChart({ start_date, end_date, projects, n
         start_date: today.toISOString(),
         end_date: todayEnd.toISOString()
       })
+
+      console.log(data.daily_average)
 
       const score = Number((Math.floor((todayData.data.total_seconds * 100) / data.daily_average) * 0.01).toFixed(2))
 
@@ -86,12 +89,6 @@ export default function CodingTimeTodayChart({ start_date, end_date, projects, n
     }
   }, [])
 
-  useEffect(() => {
-    if (user && userApikey) {
-      getLast8days(user.username, userApikey)
-    }
-  }, [start_date, end_date])
-
   return (
     <StyledCard>
       <StyledText weight="bold" size={20}>Coding Time Today</StyledText>
@@ -102,18 +99,25 @@ export default function CodingTimeTodayChart({ start_date, end_date, projects, n
           <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 10 }}>
             <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", }}>
               <ProgressRing
-                height={170}
-                width={170}
+                height={150}
+                width={150}
                 value={chartData.score}
                 centerLabel={() => `${Math.floor(chartData.score * 100)}%`}
               />
               {
-                Math.floor(chartData.score * 100) ?
+                Math.floor(chartData.score * 100) < 100 ?
                   <Text style={{ color: themeData.danger, fontWeight: "bold" }}>
                     {100 - Math.floor(chartData.score * 100)}% below usual daily total
                   </Text>
                   :
-                  null
+                  Math.floor(chartData.score * 100) === 100 ?
+                    <Text style={{ color: themeData.success, fontWeight: "bold" }}>
+                      PERFECT!
+                    </Text>
+                    :
+                    <Text style={{ color: themeData.success, fontWeight: "bold" }}>
+                      +{Math.floor((chartData.score * 100) - 100)}% above usual daily total
+                    </Text>
               }
             </View>
             <View style={{ flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center" }}>

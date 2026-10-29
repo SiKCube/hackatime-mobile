@@ -1,4 +1,5 @@
 import StyledText from "@/components/ui/text";
+import AvarageCoding from "@/features/stats/average-coding";
 import CodingTimeTodayChart from "@/features/stats/coding-t-today";
 import { useStatsCtx } from "@/features/stats/context/statsCtxProvider";
 import DatePicker from "@/features/stats/date-picker";
@@ -13,7 +14,7 @@ import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
-  const { startDate, endDate } = useStatsCtx()
+  const { startDate, endDate, selectedPeriod } = useStatsCtx()
 
   return (
     <SafeAreaView>
@@ -37,11 +38,19 @@ export default function HomeScreen() {
           end_date={endDate}
           projects={[]}
         />
-        <CodingTimeTodayChart
-          projects={[]}
-          start_date={startDate}
-          end_date={endDate}
-        />
+        {
+          selectedPeriod === "alltime" || selectedPeriod === "today" ?
+            <CodingTimeTodayChart
+              projects={[]}
+            />
+            :
+            <AvarageCoding
+              projects={[]}
+              start_date={startDate}
+              end_date={endDate}
+              no_ia={false}
+            />
+        }
         <IaVsHumanChart
           start_date={startDate}
           end_date={endDate}

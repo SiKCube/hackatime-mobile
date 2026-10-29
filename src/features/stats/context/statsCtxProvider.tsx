@@ -14,6 +14,10 @@ interface StatsContextType {
   endDate: Date
   setEndDate: Dispatch<SetStateAction<Date>>,
   projects: string[]
+  selectedPeriod: string
+  setSelectedPeriod: Dispatch<SetStateAction<string>>,
+  selectedPeriodName: string
+  setSelectedPeriodName: Dispatch<SetStateAction<string>>
   setProjects: Dispatch<SetStateAction<string[]>>,
 }
 
@@ -27,6 +31,10 @@ const STARTER_VALUES: StatsContextType = {
   endDate: new Date(new Date(new Date().getFullYear() + 1, 0, 1).getTime() - 24 * 60 * 60 * 1000),
   setEndDate: () => { },
   projects: [],
+  selectedPeriod: "alltime",
+  setSelectedPeriod: () => { },
+  selectedPeriodName: "All time",
+  setSelectedPeriodName: () => { },
   setProjects: () => { }
 }
 
@@ -46,6 +54,8 @@ export default function StatsCtxProvider({ children }: { children: React.ReactNo
   const [startDate, setStartDate] = useState<Date>(STARTER_VALUES.startDate)
   const [endDate, setEndDate] = useState<Date>(STARTER_VALUES.endDate)
   const [projects, setProjects] = useState<string[]>(STARTER_VALUES.projects)
+  const [selectedPeriod, setSelectedPeriod] = useState<string>(STARTER_VALUES.selectedPeriod)
+  const [selectedPeriodName, setSelectedPeriodName] = useState<string>(STARTER_VALUES.selectedPeriodName)
 
   // require data
   const { user, userApikey } = useAuthCtx()
@@ -89,6 +99,8 @@ export default function StatsCtxProvider({ children }: { children: React.ReactNo
       loading, error,
       startDate, setStartDate,
       endDate, setEndDate,
+      selectedPeriod, setSelectedPeriod,
+      selectedPeriodName, setSelectedPeriodName,
       projects, setProjects
     }}>
       {children}
