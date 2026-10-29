@@ -1,16 +1,19 @@
 import { getStats } from "../get-stats"
-import { Stat } from "./statsCtxProvider"
+import { Stat } from "../stats"
 
 export async function getTotalStats(
   startDate: Date, endDate: Date,
-  username: string, apikey: string
+  username: string, apikey: string,
+  projects: string[],
+  includeIA: boolean = true
 ) {
   const fetchedTotalYearStats = await getStats(username, apikey, {
     features: ["languages", "projects"],
     filter_by_category: [],
-    filter_by_project: [],
+    filter_by_project: projects,
     start_date: startDate.toISOString().slice(0, 10),
-    end_date: endDate.toISOString().slice(0, 10)
+    end_date: endDate.toISOString().slice(0, 10),
+    no_ia: !includeIA
   })
   const parsedTotalYearStats: Stat = {
     start_date: fetchedTotalYearStats.data.start,

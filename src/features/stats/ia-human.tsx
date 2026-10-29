@@ -8,6 +8,7 @@ import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
 import { useTheme } from "../theme/context/theme-ctx-provider";
 import { gethoursAndMinutes, getStats } from "./get-stats";
 import Svg, { Rect } from "react-native-svg";
+import { useStatsCtx } from "./context/statsCtxProvider";
 
 export interface MainRequest {
   total_seconds: number
@@ -18,10 +19,14 @@ interface BarData {
   porcentage: number
 }
 
-const getTotalSecs = async (username: string, apikey: string, noia: boolean, startDate: Date, endDate: Date): Promise<number> => {
+const getTotalSecs = async (
+  username: string, apikey: string,
+  noia: boolean, projects: string[],
+  startDate: Date, endDate: Date
+): Promise<number> => {
   const { data } = await getStats(username, apikey, {
     features: [],
-    filter_by_project: [],
+    filter_by_project: projects,
     filter_by_category: [],
     no_ia: noia,
     start_date: startDate.toISOString(),
@@ -45,18 +50,28 @@ interface Props {
 export default function IaVsHumanChart({ start_date, end_date }: Props) {
   const { user, userApikey } = useAuthCtx()
   const { themeData } = useTheme()
+  const { projects, includeIA } = useStatsCtx()
 
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const [chartData, setChartData] = useState<[BarData, BarData] | null>(null)
 
-  const getStat = async (username: string, apikey: string) => {
+  const getStat = async (username: string, apikey: string, selectedProjects: string[], selectedIncludeIA: boolean) => {
     try {
       setLoading(true)
       setError(null)
 
-      const total = await getTotalSecs(username, apikey, false, start_date, end_date)
-      const totalNotAI = await getTotalSecs(username, apikey, true, start_date, end_date)
+      const total = await getTotalSecs(
+        username, apikey,
+        false,
+        selectedProjects,
+        start_date, end_date
+      )
+      const totalNotAI = await getTotalSecs(
+        username, apikey,
+        true, selectedProjects,
+        start_date, end_date
+      )
 
       const iaCodingSecs = total - totalNotAI
 
@@ -79,15 +94,15 @@ export default function IaVsHumanChart({ start_date, end_date }: Props) {
 
   useEffect(() => {
     if (userApikey && user) {
-      getStat(user.username, userApikey)
+      getStat(user.username, userApikey, projects, includeIA)
     }
   }, [])
 
   useEffect(() => {
     if (userApikey && user) {
-      getStat(user.username, userApikey)
+      getStat(user.username, userApikey, projects, includeIA)
     }
-  }, [start_date, end_date])
+  }, [start_date, end_date, projects, includeIA])
 
   return (
     <StyledCard>

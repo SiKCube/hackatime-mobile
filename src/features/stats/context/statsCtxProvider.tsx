@@ -14,11 +14,13 @@ interface StatsContextType {
   endDate: Date
   setEndDate: Dispatch<SetStateAction<Date>>,
   projects: string[]
+  setProjects: Dispatch<SetStateAction<string[]>>,
   selectedPeriod: string
   setSelectedPeriod: Dispatch<SetStateAction<string>>,
   selectedPeriodName: string
   setSelectedPeriodName: Dispatch<SetStateAction<string>>
-  setProjects: Dispatch<SetStateAction<string[]>>,
+  includeIA: boolean
+  setIncludeIA: Dispatch<SetStateAction<boolean>>,
 }
 
 const STARTER_VALUES: StatsContextType = {
@@ -31,11 +33,13 @@ const STARTER_VALUES: StatsContextType = {
   endDate: new Date(new Date(new Date().getFullYear() + 1, 0, 1).getTime() - 24 * 60 * 60 * 1000),
   setEndDate: () => { },
   projects: [],
+  setProjects: () => { },
   selectedPeriod: "alltime",
   setSelectedPeriod: () => { },
   selectedPeriodName: "All time",
   setSelectedPeriodName: () => { },
-  setProjects: () => { }
+  includeIA: true,
+  setIncludeIA: () => { }
 }
 
 const StatsContext = createContext<StatsContextType>(STARTER_VALUES)
@@ -54,6 +58,7 @@ export default function StatsCtxProvider({ children }: { children: React.ReactNo
   const [startDate, setStartDate] = useState<Date>(STARTER_VALUES.startDate)
   const [endDate, setEndDate] = useState<Date>(STARTER_VALUES.endDate)
   const [projects, setProjects] = useState<string[]>(STARTER_VALUES.projects)
+  const [includeIA, setIncludeIA] = useState<boolean>(STARTER_VALUES.includeIA)
   const [selectedPeriod, setSelectedPeriod] = useState<string>(STARTER_VALUES.selectedPeriod)
   const [selectedPeriodName, setSelectedPeriodName] = useState<string>(STARTER_VALUES.selectedPeriodName)
 
@@ -63,12 +68,19 @@ export default function StatsCtxProvider({ children }: { children: React.ReactNo
   const getCtxStats = async (
     username: string, apikey: string,
     startDate: Date, endDate: Date,
+    selectedProjects: string[],
+    selectedIncludeIA: boolean
   ) => {
     try {
       setloading(true)
       setError(null)
 
-      const totalStats = await getTotalStats(startDate, endDate, username, apikey)
+      const totalStats = await getTotalStats(
+        startDate, endDate,
+        username, apikey,
+        selectedProjects,
+        selectedIncludeIA
+      )
 
       const todayStats = await geTodayStats(username, apikey)
 
@@ -83,15 +95,15 @@ export default function StatsCtxProvider({ children }: { children: React.ReactNo
 
   useEffect(() => {
     if (user && userApikey) {
-      getCtxStats(user.username, userApikey, startDate, endDate)
+      getCtxStats(user.username, userApikey, startDate, endDate, projects, includeIA)
     }
   }, [])
 
   useEffect(() => {
     if (user && userApikey) {
-      getCtxStats(user.username, userApikey, startDate, endDate)
+      getCtxStats(user.username, userApikey, startDate, endDate, projects, includeIA)
     }
-  }, [startDate, endDate])
+  }, [startDate, endDate, projects, includeIA])
 
   return (
     <StatsContext.Provider value={{
@@ -101,7 +113,8 @@ export default function StatsCtxProvider({ children }: { children: React.ReactNo
       endDate, setEndDate,
       selectedPeriod, setSelectedPeriod,
       selectedPeriodName, setSelectedPeriodName,
-      projects, setProjects
+      projects, setProjects,
+      includeIA, setIncludeIA
     }}>
       {children}
     </StatsContext.Provider>

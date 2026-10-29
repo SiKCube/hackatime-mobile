@@ -9,6 +9,7 @@ import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
 import { useTheme } from "../theme/context/theme-ctx-provider";
 import { getFirstDateOfTheWeekByISOString } from "./date-picker";
 import { gethoursAndMinutes, getStats } from "./get-stats";
+import { useStatsCtx } from "./context/statsCtxProvider";
 
 export interface SpansRequest {
   spans: Spans[];
@@ -26,13 +27,11 @@ interface ChartData {
   today: number
 }
 
-interface Props {
-  projects: string[],
-  no_ia?: boolean
-}
 
-export default function CodingTimeTodayChart({ projects, no_ia }: Props) {
+
+export default function CodingTimeTodayChart() {
   const { user, userApikey } = useAuthCtx()
+  const { projects, includeIA } = useStatsCtx()
   const { themeData } = useTheme()
 
   const [loading, setLoading] = useState<boolean>(false)
@@ -55,20 +54,17 @@ export default function CodingTimeTodayChart({ projects, no_ia }: Props) {
         filter_by_project: [],
         start_date: firstDateOfTheWeek.toISOString(),
         end_date: todayEnd.toISOString(),
-        no_ia
+        no_ia: !includeIA
       })
-
 
       const todayData = await getStats(username, apikey, {
         features: [],
         filter_by_category: [],
         filter_by_project: projects,
-        no_ia,
+        no_ia: !includeIA,
         start_date: today.toISOString(),
         end_date: todayEnd.toISOString()
       })
-
-      console.log(data.daily_average)
 
       const score = Number((Math.floor((todayData.data.total_seconds * 100) / data.daily_average) * 0.01).toFixed(2))
 
@@ -79,7 +75,8 @@ export default function CodingTimeTodayChart({ projects, no_ia }: Props) {
       })
       setLoading(false)
     } catch (e) {
-      return (`${e}`)
+      setError(`${e}`)
+      setLoading(false)
     }
   }
 
@@ -88,6 +85,12 @@ export default function CodingTimeTodayChart({ projects, no_ia }: Props) {
       getLast8days(user.username, userApikey)
     }
   }, [])
+
+  useEffect(() => {
+    if (user && userApikey) {
+      getLast8days(user.username, userApikey)
+    }
+  }, [projects, includeIA])
 
   return (
     <StyledCard>

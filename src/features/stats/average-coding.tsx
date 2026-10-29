@@ -27,8 +27,6 @@ interface ChartData {
 interface Props {
   start_date: Date,
   end_date: Date,
-  projects: string[],
-  no_ia?: boolean
 }
 
 const getDaysBetweenDates = (startDate: Date, endDate: Date): number => { 
@@ -36,8 +34,9 @@ const getDaysBetweenDates = (startDate: Date, endDate: Date): number => {
   return Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 }
 
-export default function AvarageCoding({ start_date, end_date, projects, no_ia }: Props) {
+export default function AvarageCoding({ start_date, end_date }: Props) {
   const { user, userApikey } = useAuthCtx()
+  const { projects, includeIA } = useStatsCtx()
   const { selectedPeriodName } = useStatsCtx()
 
   const [loading, setLoading] = useState<boolean>(false)
@@ -55,7 +54,7 @@ export default function AvarageCoding({ start_date, end_date, projects, no_ia }:
         filter_by_project: projects,
         start_date: start_date.toISOString(),
         end_date: end_date.toISOString(),
-        no_ia
+        no_ia: !includeIA
       })
 
       setChartData({
@@ -64,7 +63,8 @@ export default function AvarageCoding({ start_date, end_date, projects, no_ia }:
       })
       setLoading(false)
     } catch (e) {
-      return (`${e}`)
+      setError(`${e}`)
+      setLoading(false)
     }
   }
 
@@ -78,7 +78,7 @@ export default function AvarageCoding({ start_date, end_date, projects, no_ia }:
     if (user && userApikey) {
       getAvarage(user.username, userApikey)
     }
-  }, [start_date, end_date])
+  }, [start_date, end_date, projects, includeIA])
 
   return (
     <StyledCard>

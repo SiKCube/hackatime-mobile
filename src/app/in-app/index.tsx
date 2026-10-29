@@ -36,7 +36,6 @@ export default function HomeScreen() {
         <RhythmChart
           start_date={startDate}
           end_date={endDate}
-          projects={[]}
         />
         {
           selectedPeriod === "alltime" || selectedPeriod === "today" ?

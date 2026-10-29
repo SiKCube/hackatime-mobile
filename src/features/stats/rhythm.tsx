@@ -9,6 +9,7 @@ import Svg, { Rect } from "react-native-svg";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
 import { useTheme } from "../theme/context/theme-ctx-provider";
 import { gethoursAndMinutes } from "./get-stats";
+import { useStatsCtx } from "./context/statsCtxProvider";
 
 export interface SpansRequest {
   spans: Span[];
@@ -28,7 +29,6 @@ type ChartData = {
 interface Props {
   start_date: Date
   end_date: Date
-  projects: string[]
 }
 
 interface SelectedHour {
@@ -43,7 +43,7 @@ const TIMES = ["12AM", "3AM", "6AM", "9AM", "12PM", "3PM", "6PM", "9PM", "_"]
 const CELL_SIZE = 20
 const GAP = 5
 
-export default function RhythmChart({ start_date, end_date, projects }: Props) {
+export default function RhythmChart({ start_date, end_date }: Props) {
   const [chartData, setChartData] = useState<ChartData[] | null>(null)
   const [topHours, setTopHours] = useState<number>(0)
   const [selectedHour, setSelectedHour] = useState<SelectedHour | null>(null)
@@ -51,6 +51,7 @@ export default function RhythmChart({ start_date, end_date, projects }: Props) {
   const [error, setError] = useState<string | null>(null)
 
   const { user, userApikey } = useAuthCtx()
+  const { projects } = useStatsCtx()
   const { themeData } = useTheme()
 
   const getSpans = async (username: string, apikey: string) => {
