@@ -5,12 +5,12 @@ import { Stack } from "expo-router";
 
 export default function RootLayout() {
   return (
-    <AuthContextProvider>
-      <ThemeProvider>
+    <ThemeProvider>
+      <AuthContextProvider>
         <RootNavigator />
         <SplashScreenController />
-      </ThemeProvider>
-    </AuthContextProvider>
+      </AuthContextProvider>
+    </ThemeProvider>
   );
 }
 

@@ -13,13 +13,12 @@ export default function ProjectsLayout() {
         backgroundColor: themeData.darkless,
       },
       headerTitleStyle: {
-        color: themeData.primary,
         fontWeight: "bold"
       }
     }}>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="programs" options={{ headerTitle: "Programs", headerTintColor: themeData.surface_content }} />
-      <Stack.Screen name="theme" options={{ headerTitle: "Theme", headerTintColor: themeData.surface_content }} />
+      <Stack.Screen name="theme" options={{ headerTitle: "Pick a theme", headerTintColor: themeData.surface_content }} />
     </Stack>
   )
 }
