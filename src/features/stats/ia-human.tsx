@@ -38,6 +38,7 @@ const getTotalSecs = async (
 }
 
 const get100porcent = (value: number, your100: number): number => {
+  if (your100 === 0 || value == 0) return 0
   const r = Number(((value * 100) / your100).toFixed(1))
   return r
 }
@@ -130,10 +131,6 @@ export default function IaVsHumanChart({ start_date, end_date }: Props) {
                 />
               </Svg>
             </View>
-            {/* <View style={{ width: "100%", height: 20, flexDirection: "row" }}>
-              <View style={{ width: `${chartData[1].porcentage}%`, height: 20, backgroundColor: themeData.primary, borderTopStartRadius: 100, borderBottomStartRadius: 100 }} />
-              <View style={{ width: `${chartData[0].porcentage}%`, height: 20, backgroundColor: themeData.blue, borderTopEndRadius: 100, borderBottomEndRadius: 100 }} />
-            </View> */}
             <View style={{ flexDirection: "row", justifyContent: "space-between", padding: 10 }}>
               <View style={{ flexDirection: "column", justifyContent: "flex-start" }}>
                 <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 10 }}>

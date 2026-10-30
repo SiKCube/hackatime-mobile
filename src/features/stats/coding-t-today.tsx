@@ -3,13 +3,13 @@ import LoadingSkeleton from "@/components/loading-skeleton";
 import StyledCard from "@/components/ui/card";
 import StyledText from "@/components/ui/text";
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { ProgressRing } from "react-native-chart-kit/v2";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
 import { useTheme } from "../theme/context/theme-ctx-provider";
+import { useStatsCtx } from "./context/statsCtxProvider";
 import { getFirstDateOfTheWeekByISOString } from "./date-picker";
 import { gethoursAndMinutes, getStats } from "./get-stats";
-import { useStatsCtx } from "./context/statsCtxProvider";
 
 export interface SpansRequest {
   spans: Spans[];
@@ -109,18 +109,23 @@ export default function CodingTimeTodayChart() {
               />
               {
                 Math.floor(chartData.score * 100) < 100 ?
-                  <Text style={{ color: themeData.danger, fontWeight: "bold" }}>
+                  <StyledText type="error" weight="bold">
                     {100 - Math.floor(chartData.score * 100)}% below usual daily total
-                  </Text>
+                  </StyledText>
                   :
                   Math.floor(chartData.score * 100) === 100 ?
-                    <Text style={{ color: themeData.success, fontWeight: "bold" }}>
+                    <StyledText type="success" weight="bold">
                       PERFECT!
-                    </Text>
+                    </StyledText>
                     :
-                    <Text style={{ color: themeData.success, fontWeight: "bold" }}>
-                      +{Math.floor((chartData.score * 100) - 100)}% above usual daily total
-                    </Text>
+                    Math.floor(chartData.score * 100) === 0 ?
+                      <StyledText type="error" weight="bold">
+                        TIME to CODE! You have not coded today
+                      </StyledText>
+                      :
+                      <StyledText type="success" weight="bold">
+                        +{Math.floor((chartData.score * 100) - 100)}% above usual daily total
+                      </StyledText>
               }
             </View>
             <View style={{ flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center" }}>
