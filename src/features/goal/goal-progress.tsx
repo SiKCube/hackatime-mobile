@@ -34,10 +34,10 @@ export interface GrandTotal {
 
 const getLeftTime = () => {
   const today = new Date()
-  const todayZero = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0).getTime()
-  const passtime = today.getTime() - todayZero
+  const todayZero = new Date(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 0, 0).getTime()
+  const passtime = Math.round(86400 - ((today.getTime() - todayZero) / 1000))
 
-  return gethoursAndMinutes(passtime / 1000, true)
+  return gethoursAndMinutes(passtime)
 }
 
 export default function GoalProgress() {
