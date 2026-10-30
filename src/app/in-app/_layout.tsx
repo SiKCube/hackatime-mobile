@@ -9,7 +9,6 @@ export default function AppTabLayout() {
 
   return (
     <ChartKitProvider preset={"chartTheme"} presets={{ chartTheme }}>
-      <StatsCtxProvider>
         <Tabs
           screenOptions={{
             headerShown: false,
@@ -65,7 +64,6 @@ export default function AppTabLayout() {
             }}
           />
         </Tabs>
-      </StatsCtxProvider>
     </ChartKitProvider>
   )
 }
