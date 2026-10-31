@@ -54,3 +54,10 @@ Also I had the idea to add a year wrap feature like spotify, but October is endi
 
 ### October is near to end 
 I need to end this project ASAP, why? Because I planning to buy a PC components combo, and  my cousin will pick it from the US to my coutry. Why not buy it online? In black friday will be a pain and after black friday my cousin will already be here. So if you are a reviewer, you could help me.
+
+# Before Submit
+**(Oct 31 2026)**
+
+Well, I didn't write nothing in the devlog because I wanted to submit the project before november starts (writting a devlog takes time). So sorry about that.
+
+I added a lot of things since the last devlog: notifications, reminders, themes, a config section, but I didn't add the warpped function. I'll add it in the future with offline features. First I wanna see how this projects performs on the review and the ship.

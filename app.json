@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "hackatime-mobile",
+    "name": "Hackatime Mobile",
     "slug": "hackatime-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/hacka/icon.png",
     "scheme": "hackatimemobile",
     "userInterfaceStyle": "automatic",
     "ios": {
@@ -13,9 +13,9 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./assets/hacka/foreground.png",
+        "backgroundImage": "./assets/hacka/background.png",
+        "monochromeImage": "./assets/hacka/monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.sikcube.hackatimemobile"
@@ -29,9 +29,9 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "backgroundColor": "#4A2D31",
+          "image": "./assets/hacka/splash-icon.png",
+          "imageWidth": 120
         }
       ],
       "expo-secure-store"

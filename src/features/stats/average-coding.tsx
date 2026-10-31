@@ -36,8 +36,7 @@ const getDaysBetweenDates = (startDate: Date, endDate: Date): number => {
 
 export default function AvarageCoding({ start_date, end_date }: Props) {
   const { user, userApikey } = useAuthCtx()
-  const { projects, includeIA } = useStatsCtx()
-  const { selectedPeriodName } = useStatsCtx()
+  const { projects, includeIA, selectedPeriodName } = useStatsCtx()
 
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
