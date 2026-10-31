@@ -8,9 +8,10 @@ interface Props {
   href: Href
   type: "primary" | "secondary"
   disable?: boolean
+  fullWidth?: boolean
 }
 
-export default function StyledLinkButton({ children, href, text, type, disable }: Props) {
+export default function StyledLinkButton({ children, href, text, type, disable, fullWidth }: Props) {
   const { themeData } = useTheme()
 
   return (
@@ -28,6 +29,7 @@ export default function StyledLinkButton({ children, href, text, type, disable }
         gap: 5,
         justifyContent: "center",
         alignItems: "center",
+        width: fullWidth ? "100%" : "auto",
         backgroundColor: type === "primary" ? themeData.primary : themeData.secondary
       }}>
         {children}

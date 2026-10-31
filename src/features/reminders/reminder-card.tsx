@@ -7,23 +7,29 @@ import { Noti } from "./context/types";
 
 const getWeekdayName = (dayNumber: number) => {
   const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  return weekdays[dayNumber] || "Invalid day number";
+  return weekdays[dayNumber - 1] || "Invalid day number";
 }
 
-export default function ReminderCard({ hour, min, groupid, weekdays, projects, notisids }: Noti) {
+const formatTime = (hour: number, min: number) => {
+  const formattedHour = hour.toString().padStart(2, '0');
+  const formattedMin = min.toString().padStart(2, '0');
+  return `${formattedHour}:${formattedMin}`;
+}
+
+export default function ReminderCard({ hour, min, groupid, weekdays, projects }: Noti) {
   const { deleteNotiGroup } = useReminders()
 
   return (
     <StyledCard>
-      <View style={{ flexDirection: "column", gap: 5 }}>
-        <StyledText weight="bold" size={20}>Reminder at: {hour}:{min}</StyledText>
-        <StyledText type="seconday">Each: {weekdays.map((weekday) => `${getWeekdayName(weekday)} `)}</StyledText>
+      <StyledText weight="bold" size={20}>Reminder at: {formatTime(hour, min)}</StyledText>
+      <View style={{ flexDirection: "column", gap: 10 }}>
         {
           projects.length > 0 ?
             <StyledText size={13} type="seconday">Projects: {projects.join(", ")}</StyledText>
             :
             <StyledText size={13} type="seconday">All projects</StyledText>
         }
+        <StyledText size={13} type="seconday">Each: {weekdays.map((weekday) => `${getWeekdayName(weekday)}`).join(", ")}</StyledText>
         <StyledButton type="primary" text="Delete" onClick={() => deleteNotiGroup(groupid)} />
       </View>
     </StyledCard>

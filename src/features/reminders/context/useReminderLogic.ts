@@ -38,7 +38,9 @@ export function useReminderLogic() {
             body: `This counts for ${projects.length > 0 ? `this projects: ${projects.join(", ")}` : "All projects"}`,
             data: {
               groupid: groupid,
-            }
+            },
+            sound: "default",
+            vibrate: [100, 200, 300, 100],
           },
           trigger: {
             type: SchedulableTriggerInputTypes.WEEKLY,
