@@ -5,7 +5,7 @@ import StyledText from "@/components/ui/text";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import Svg, { Rect } from "react-native-svg";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
 import { gethoursAndMinutes } from "../stats/get-stats";
@@ -48,31 +48,31 @@ export default function GoalProgress() {
   const { user, userApikey } = useAuthCtx()
 
   const { themeData } = useTheme()
+  
+  const getGoal = async (userid: string, apikey: string) => {
+    try {
+      setError(null)
+      setLoading(true)
+
+      const { data }: { data?: GoalRequest } = await axios.request({
+        url: `https://hackatime.hackclub.com/api/hackatime/v1/users/${userid}/statusbar/today`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${apikey}`
+        },
+      })
+
+      if (!data) throw Error("Can't get goals")
+
+      setGoal(data.data)
+      setLoading(false)
+    } catch (e) {
+      setError(`${e}`)
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const getGoal = async (userid: string, apikey: string) => {
-      try {
-        setError(null)
-        setLoading(true)
-
-        const { data }: { data?: GoalRequest } = await axios.request({
-          url: `https://hackatime.hackclub.com/api/hackatime/v1/users/${userid}/statusbar/today`,
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${apikey}`
-          },
-        })
-
-        if (!data) throw Error("Can't get goals")
-
-        setGoal(data.data)
-        setLoading(false)
-      } catch (e) {
-        setError(`${e}`)
-        setLoading(false)
-      }
-    }
-
     if (user && userApikey) {
       getGoal(user.id, userApikey)
     }
@@ -112,26 +112,42 @@ export default function GoalProgress() {
                 />
               </View>
             </View>
-            <Svg width={"100%"} height={10}>
-              <Rect
-                x="0"
-                y="0"
-                rx="5"
-                ry="5"
-                width={"100%"}
-                height={10}
-                fill={themeData.surface_200}
-              />
-              <Rect
-                x="0"
-                y="0"
-                rx="5"
-                ry="5"
-                width={`${goal.goal.completion_percent}%`}
-                height={10}
-                fill={goal.goal.complete ? themeData.success : themeData.primary}
-              />
-            </Svg>
+            <View style={{ gap: 2 }}>
+              <Svg width={"100%"} height={10}>
+                <Rect
+                  x="0"
+                  y="0"
+                  rx="5"
+                  ry="5"
+                  width={"100%"}
+                  height={10}
+                  fill={themeData.surface_200}
+                />
+                <Rect
+                  x="0"
+                  y="0"
+                  rx="5"
+                  ry="5"
+                  width={`${goal.goal.completion_percent}%`}
+                  height={10}
+                  fill={goal.goal.complete ? themeData.success : themeData.primary}
+                />
+              </Svg>
+              <Pressable
+                onPress={() => {
+                  if (user && userApikey) {
+                    getGoal(user.id, userApikey)
+                  }
+                }}
+                style={{ flexDirection: "row", gap: 2, alignItems: "center", justifyContent: "flex-end" }}>
+                <Ionicons
+                  name={"reload-circle"}
+                  size={10}
+                  color={goal.goal.complete ? themeData.success : themeData.secondary}
+                />
+                <StyledText size={10} type="seconday">Click to reload</StyledText>
+              </Pressable>
+            </View>
           </View>
           :
           <LoadingSkeleton height={50} />

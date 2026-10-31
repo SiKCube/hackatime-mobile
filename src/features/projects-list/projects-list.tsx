@@ -1,11 +1,12 @@
+import LoadingSkeleton from "@/components/loading-skeleton";
 import StyledText from "@/components/ui/text";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { RefreshControl, ScrollView, View } from "react-native";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
 import { gethoursAndMinutes } from "../stats/get-stats";
 import ProjectCard, { Project } from "./project-card";
-import LoadingSkeleton from "@/components/loading-skeleton";
+import { useTheme } from "../theme/context/theme-ctx-provider";
 
 interface ProjectsRequest {
   projects: ProjectsData[];
@@ -39,67 +40,82 @@ export default function ProjectsList() {
   const [projectsList, setprojectsList] = useState<Project[] | null>(null)
 
   const { user, userApikey } = useAuthCtx()
+  const { themeData } = useTheme()
+
+  const getProjectList = async (username: string, apikey: string) => {
+    try {
+      setLoading(true)
+      setError(null)
+
+      const { data }: { data?: ProjectsRequest } = await axios.request({
+        method: 'GET',
+        url: `https://hackatime.hackclub.com/api/v1/users/${username}/projects/details`,
+        headers: {
+          Authorization: `Bearer ${apikey}`
+        }
+      })
+
+      if (!data) throw Error("Can't get projects")
+
+      const prjlist = data.projects
+
+      const r: Project[] = prjlist.map((prj): Project => {
+        return {
+          name: prj.name,
+          archived: prj.archived,
+          languages: prj.languages,
+          repo_url: prj.repo_url,
+          total_seconds: prj.total_seconds,
+          last_heartbeat: new Date(prj.last_heartbeat),
+        }
+      })
+
+      setprojectsList(r)
+      setLoading(false)
+    } catch (e) {
+      setError(`${e}`)
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const getProjectList = async (username: string, apikey: string) => {
-      try {
-        setLoading(true)
-        setError(null)
-
-        const { data }: { data?: ProjectsRequest } = await axios.request({
-          method: 'GET',
-          url: `https://hackatime.hackclub.com/api/v1/users/${username}/projects/details`,
-          headers: {
-            Authorization: `Bearer ${apikey}`
-          }
-        })
-
-        if (!data) throw Error("Can't get projects")
-
-        const prjlist = data.projects
-
-        const r: Project[] = prjlist.map((prj): Project => {
-          return {
-            name: prj.name,
-            archived: prj.archived,
-            languages: prj.languages,
-            repo_url: prj.repo_url,
-            total_seconds: prj.total_seconds,
-            last_heartbeat: new Date(prj.last_heartbeat),
-          }
-        })
-
-        setprojectsList(r)
-        setLoading(false)
-      } catch (e) {
-        setError(`${e}`)
-        setLoading(false)
-      }
-    }
-
     if (user && userApikey) {
       getProjectList(user.username, userApikey)
     }
   }, [])
 
   return (
-    <ScrollView contentContainerStyle={{ gap: 15, flexDirection: "column", margin: 15 }}>
-      <View>
-        <StyledText size={20} weight="bold">Projects</StyledText>
-        <StyledText>{error}</StyledText>
-      </View>
-      {
-        !loading && projectsList ?
-          <StyledText>
-            You've spent
-            <StyledText weight="bold" type="primary"> {getSpentTime(projectsList)} </StyledText>
-            coding across active projects
-          </StyledText>
-          :
-          <LoadingSkeleton
-            height={50}
-          />
+    <ScrollView
+      contentContainerStyle={{ gap: 20, flexDirection: "column", padding: 20 }}
+      refreshControl={
+        <RefreshControl refreshing={loading}
+          onRefresh={() => {
+            if (user && userApikey) {
+              getProjectList(user.username, userApikey)
+            }
+          }}
+          colors={[themeData.primary]}
+          progressBackgroundColor={themeData.darkless}
+          progressViewOffset={-10}
+        />
       }
+    >
+      <View>
+        <StyledText size={20} weight="bold"><StyledText weight="bold" size={20} type="primary">Your</StyledText> Projects</StyledText>
+        <StyledText>{error}</StyledText>
+        {
+          !loading && projectsList ?
+            <StyledText>
+              You've spent
+              <StyledText weight="bold" type="primary"> {getSpentTime(projectsList)} </StyledText>
+              coding across active projects
+            </StyledText>
+            :
+            <LoadingSkeleton
+              height={50}
+            />
+        }
+      </View>
       {
         !loading && projectsList ?
           projectsList.map((prj, index) => {
@@ -120,7 +136,7 @@ export default function ProjectsList() {
             height={150}
             key={v}
           />)
-}
+      }
       <View style={{ height: 150 }} />
     </ScrollView>
   )

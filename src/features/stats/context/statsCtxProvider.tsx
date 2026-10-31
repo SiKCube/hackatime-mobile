@@ -21,6 +21,7 @@ interface StatsContextType {
   setSelectedPeriodName: Dispatch<SetStateAction<string>>
   includeIA: boolean
   setIncludeIA: Dispatch<SetStateAction<boolean>>,
+  loadStats: () => Promise<void>
 }
 
 const STARTER_VALUES: StatsContextType = {
@@ -39,7 +40,8 @@ const STARTER_VALUES: StatsContextType = {
   selectedPeriodName: "All time",
   setSelectedPeriodName: () => { },
   includeIA: true,
-  setIncludeIA: () => { }
+  setIncludeIA: () => { },
+  loadStats: async () => { }
 }
 
 const StatsContext = createContext<StatsContextType>(STARTER_VALUES)
@@ -94,16 +96,18 @@ export default function StatsCtxProvider({ children }: { children: React.ReactNo
   }
 
   useEffect(() => {
-    if (user && userApikey) {
-      getCtxStats(user.username, userApikey, startDate, endDate, projects, includeIA)
-    }
+    loadStats()
   }, [])
 
   useEffect(() => {
-    if (user && userApikey) {
-      getCtxStats(user.username, userApikey, startDate, endDate, projects, includeIA)
-    }
+    loadStats()
   }, [startDate, endDate, projects, includeIA])
+
+  const loadStats = async () => {
+    if (user && userApikey) {
+      await getCtxStats(user.username, userApikey, startDate, endDate, projects, includeIA)
+    }
+  }
 
   return (
     <StatsContext.Provider value={{
@@ -114,7 +118,8 @@ export default function StatsCtxProvider({ children }: { children: React.ReactNo
       selectedPeriod, setSelectedPeriod,
       selectedPeriodName, setSelectedPeriodName,
       projects, setProjects,
-      includeIA, setIncludeIA
+      includeIA, setIncludeIA,
+      loadStats
     }}>
       {children}
     </StatsContext.Provider>
