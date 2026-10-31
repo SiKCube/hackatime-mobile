@@ -90,7 +90,7 @@ export default function AvarageCoding({ start_date, end_date }: Props) {
           <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", margin: 30, gap: 20 }}>
             <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 5 }}>
               <StyledText type="primary" weight="bold" size={35}>
-                {gethoursAndMinutes(chartData.total)}
+                {gethoursAndMinutes(chartData.promedio)}
               </StyledText>
               <StyledText type="seconday" weight="bold" size={15}>
                 per day across {getDaysBetweenDates(start_date, end_date)} days
