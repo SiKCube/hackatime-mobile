@@ -8,7 +8,7 @@
 > This project has a [devlog](./DEVLOG.md)
 
 ## Download and Features
-Look at the [realeses](https://github.com/SiKCube/hackatime-mobile/releases/tag/v1.0) curently the most recent version is: `1.0`
+Look at the [lastest release](https://github.com/SiKCube/hackatime-mobile/releases/tag/v1.0) to download, curently the most recent version is: `1.0`
 
 
 ### Login with OAuth
@@ -171,6 +171,6 @@ This would be the first part beacuse there is more things I would like to add an
 
 ## AI DISCLOSURE
 - AI used for researching how to use schedule notifications with `expo-notifications` (asking ChatGPT).
-- Ghost text suggestions used beetwen October 25-31 (just for coding, when writing docs is funnier by hand).
+- Ghost text suggestions used beetwen October 25-31 (just for repetitive coding, when writing docs is funnier by hand).
 
 > Thanks for reading! 
