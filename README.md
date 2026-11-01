@@ -1,14 +1,15 @@
 <div align="center">
-<img width="220" alt="Hackatime Mobile Login" src="./images/hackatime-mobile.png" />
+<img width="220" alt="Hackatime Mobile Logo" src="./images/hackatime-mobile.png" />
 <h1>Hackatime Mobile</h1>
 </div>
 
 <p align="center">An <b>android app</b> that uses <b>OAuth</b> to get your hackatime data and present it like the original hackatime but on your phone!</p>
 
-## Download and Features
-Look at the [realeses](https://github.com/SiKCube/hackatime-mobile/releases) curently the most recent version is: `1.0.0`
+> This project has a [devlog](./DEVLOG.md)
 
-> This project has a [devlog](./DEVLOG.md) 
+## Download and Features
+Look at the [realeses](https://github.com/SiKCube/hackatime-mobile/releases/tag/v1.0) curently the most recent version is: `1.0`
+
 
 ### Login with OAuth
 Using `expo-auth-session` and an OAuth flow, this gives you an easy way to log in with your hackatime account, without putting your API_KEY.
@@ -34,6 +35,10 @@ Using `React Native Chart Kit` and `React Native Svg` we give you charts that lo
 
 <div align="center">
 <img width="175" alt="Hackatime Mobile Stats" src="./images/hackatime-home.jpg" />
+<img width="175" alt="Hackatime Mobile Stats Languages" src="./images/dashboard-languages.jpg" />
+<img width="175" alt="Hackatime Mobile Stats Timeline" src="./images/dashboard-timeline.jpg" />
+<img width="175" alt="Hackatime Mobile Stats and Rhythm Coding Time Today" src="./images/dashboard-rhythm-coding-t-today.jpg" />
+<img width="175" alt="Hackatime Mobile Stats ia vs human" src="./images/dashboard-ia-vs-human.jpg" />
 </div>
 
 ### Projects list
@@ -53,7 +58,7 @@ Using `expo-notifications`, you can select an hour, amount of time, which weekda
 </div>
 
 ### Themes
-You can pick a theme from the orginal hackatime, this includes the following:
+Go to settings and you can pick a theme from the orginal hackatime, this includes the following:
 
 | Themes |
 |---|
@@ -71,11 +76,57 @@ You can pick a theme from the orginal hackatime, this includes the following:
 | `AMOLED` |
 
 <div align="center">
+<img width="175" alt="Hackatime Mobile Settings" src="./images/hackatime-settings.jpg" />
 <img width="175" alt="Hackatime Mobile Themes" src="./images/themes.jpg" />
 </div>
 
-## Teck Stack
+## Tech Stack
 This project was made using: [Expo](https://docs.expo.dev/) and [React Native](http://reactnative.dev/) for the mobile implementation, [React Native Chart Kit](https://chartkit.io/) for some of the charts, [Axios](https://axios.rest/). All written in [VSCode](https://code.visualstudio.com/).
+
+## Project Structure
+
+```text
+hackatime-mobile/
+|
+|── assets/
+  |── hacka/ #apk icons
+  └── hackatime-mobile.png
+|── src/
+  |── app/ #app routes
+    |── in-app/
+      |── projects/
+        |── _layout.tsx
+        |── [projectId].tsx
+        └── index.tsx #projects list
+      |── settings/
+        |── _layout.tsx
+        |── theme.tsx
+        └── index.tsx #settings
+      |── streak/
+        |── _layout.tsx
+        |── new-reminder.tsx
+        └── index.tsx #reminders
+      |── _layout.tsx
+      └── index.tsx #dashboard
+    |── _layout.tsx
+    └── index.tsx #main route
+  |── components/
+    └── ui/ #general ui components
+  |── features/
+    |── theme/
+    |── stats/
+    |── reminders/
+    |── profile/
+    |── auth-ctx/
+    |── auth-screen/
+    |── stat-panel/
+    |── project-list/
+    |── profile/
+    └── goal/
+|── const.ts #config vars for the project
+|── eas.json
+└── app.json
+```
 
 ## How to run it?
 ```sh
@@ -120,6 +171,6 @@ This would be the first part beacuse there is more things I would like to add an
 
 ## AI DISCLOSURE
 - AI used for researching how to use schedule notifications with `expo-notifications` (asking ChatGPT).
-- Ghost text suggestions used beetwen October 25-31.
+- Ghost text suggestions used beetwen October 25-31 (just for coding, when writing docs is funnier by hand).
 
 > Thanks for reading! 
