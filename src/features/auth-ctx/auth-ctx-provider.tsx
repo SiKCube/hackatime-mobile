@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { getStoredData, killAllStoredData, storeData } from "../storage";
 import { getSecure, killSecures, saveSecure } from "./secure-save";
 import { router } from "expo-router"
-import { STORE_KEYS } from "../../../consts";
+import { APP_UUID, STORE_KEYS } from "../../../consts";
 
 interface AuthContextType {
   userToken: string | null,
@@ -38,7 +38,6 @@ const AuthContext = createContext<AuthContextType>({
   logout: () => { }
 })
 
-const APP_UUID = "hNxiOrqENsDE7pZhxLsXbK7p0-1B6KCOO7XsK7peb3c"
 const AUTH_URL = "https://hackatime.hackclub.com/oauth/authorize"
 const OAUTH_REVOKE_URL = "https://hackatime.hackclub.com/oauth/revoke"
 const OAUTH_TOKEN_URL = "https://hackatime.hackclub.com/oauth/token"

@@ -60,4 +60,17 @@ I need to end this project ASAP, why? Because I planning to buy a PC components 
 
 Well, I didn't write nothing in the devlog because I wanted to submit the project before november starts (writting a devlog takes time). So sorry about that.
 
-I added a lot of things since the last devlog: notifications, reminders, themes, a config section, but I didn't add the warpped function. I'll add it in the future with offline features. First I wanna see how this projects performs on the review and the ship.
+I added a lot of things since the last devlog: notifications, reminders, themes, a config section, but I didn't add the warpped function. I'll add it in the future with offline features. First I wanna see how the project performs on the review and the ship.
+
+## Resume
+**(Oct 31 2026)**
+
+Storytime yeah. 
+
+First it was complicated to learn Expo SDKs, like expo-secure-store. I had some practice with Macondo mobile (my practice project for this one), so it wasn't too dificult. But new ones to me like expo-notifications, expo-auth-session and making my own charts to try to be as similar to the hackatime's (the Rhythm chart, especialy).
+
+Other one that was dificult was the Project Timeline, because this one makes a resume per week, and on the API docs there isn't an API for that, so had to make the logic to split a period of time in x number of weeks to cicle them to fetch data for each week. Also the tick to make it perfect, thi s made me to try to optimize it, where it wasn't any necesity.
+
+Also I locked in the last week of October, to end this. Because I had plans to buy PC components for christmas.
+
+This was funny and I want to add more things and I will.
