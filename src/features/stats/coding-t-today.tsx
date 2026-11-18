@@ -66,7 +66,10 @@ export default function CodingTimeTodayChart() {
         end_date: todayEnd.toISOString()
       })
 
-      const score = Number((Math.floor((todayData.data.total_seconds * 100) / data.daily_average) * 0.01).toFixed(2))
+      let score = 0
+      if (data.daily_average !== 0) {
+        score = Number((Math.floor((todayData.data.total_seconds * 100) / data.daily_average) * 0.01).toFixed(2))
+      }
 
       setChartData({
         score,
