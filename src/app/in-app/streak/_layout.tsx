@@ -16,7 +16,7 @@ export default function ProjectsLayout() {
         }
       }}>
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="new-reminder" options={{ headerTitle: "New Reminder", headerTintColor: themeData.surface_content }} />
+        <Stack.Screen name="new-reminder" options={{ headerTitle: "New Reminder", headerTintColor: themeData.surface_content, headerTitleStyle: { fontWeight: "bold" } }} />
       </Stack>
     </ReminderProvider>
   )

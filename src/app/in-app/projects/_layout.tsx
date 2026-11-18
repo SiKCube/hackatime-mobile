@@ -14,7 +14,7 @@ export default function ProjectsLayout() {
       }
     }}>
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="[username]" options={{ headerTitle: "Other Profile", headerTintColor: themeData.surface_content }} />
+      <Stack.Screen name="[projectId]" options={{ headerTitle: "Details", headerTintColor: themeData.surface_content, headerTitleStyle: { fontWeight: "bold" } }} />
     </Stack>
   )
 }
