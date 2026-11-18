@@ -42,7 +42,17 @@ export default function AppTabLayout() {
                 :
                 <Ionicons name="list-circle-outline" size={24} color={color} />
             }}
-          />
+        />
+        <Tabs.Screen
+          name="leaderboard"
+          options={{
+            title: "Leaderboard",
+            tabBarIcon: ({ focused, color }) => focused ?
+              <Ionicons name="podium" size={24} color={color} />
+              :
+              <Ionicons name="podium-outline" size={24} color={color} />
+          }}
+        />
           <Tabs.Screen
             name="streak"
             options={{

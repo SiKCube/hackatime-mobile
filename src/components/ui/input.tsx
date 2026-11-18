@@ -1,16 +1,20 @@
-import { Dispatch } from "react";
+import { useTheme } from "@/features/theme/context/theme-ctx-provider";
+import { Dispatch, SetStateAction } from "react";
 import { KeyboardTypeOptions, TextInput, View } from "react-native";
 
 interface Props {
   placeholder: string
   change: string
-  setChange: Dispatch<string>
+  setChange: Dispatch<SetStateAction<string>>
   keyboardType: KeyboardTypeOptions
+  width: number
 }
 
-export default function StyledInput({ keyboardType, placeholder, change, setChange }: Props) {
+export default function StyledInput({ keyboardType, placeholder, change, setChange, width }: Props) {
+  const { themeData } = useTheme()
+  
   return (
-    <View>
+    <View style={{ width: "100%" }}>
       <TextInput
         style={{
           borderWidth: 1,
@@ -22,6 +26,7 @@ export default function StyledInput({ keyboardType, placeholder, change, setChan
           paddingLeft: 16,
           paddingRight: 16,
           color: themeData.surface_content,
+          width: width,
         }}
         placeholder={placeholder}
         value={change}
