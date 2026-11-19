@@ -2,21 +2,33 @@ import StyledCard from "@/components/ui/card";
 import StyledText from "@/components/ui/text";
 import { Image } from "expo-image";
 import { View } from "react-native";
+import { Link } from "expo-router";
 import { gethoursAndMinutes } from "../stats/get-stats";
 import { Entries } from "./types";
 
 export default function BoardItem({ rank, user, total_seconds }: Entries) {
   return (
-    <StyledCard>
+    <StyledCard important={rank <= 3}>
       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 7, alignItems: "center" }}>
+        <View
+          style={{ flexDirection: "row", justifyContent: "space-between", gap: 7, alignItems: "center" }}
+        >
           <StyledText type="primary" weight="bold" size={20}>{rank}</StyledText>
-          <Image
-            style={{ width: 30, height: 30, borderRadius: 100 }}
-            source={{
-              uri: user.avatar_url,
+          <Link
+            href={{
+              pathname: "/in-app/leaderboard/[username]",
+              params: {
+                username: user.username,
+              }
             }}
-          />
+          >
+            <Image
+              style={{ width: 30, height: 30, borderRadius: 100 }}
+              source={{
+                uri: user.avatar_url,
+              }}
+            />
+          </Link>
           <StyledText weight="bold">{user.username}</StyledText>
         </View>
         <StyledText weight="bold">{gethoursAndMinutes(total_seconds)}</StyledText>
