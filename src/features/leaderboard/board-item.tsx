@@ -29,7 +29,18 @@ export default function BoardItem({ rank, user, total_seconds }: Entries) {
               }}
             />
           </Link>
-          <StyledText weight="bold">{user.username}</StyledText>
+          <StyledText weight="bold">
+            <Link
+              href={{
+                pathname: "/in-app/leaderboard/[username]",
+                params: {
+                  username: `${user.id}|${user.username}|${user.avatar_url}`,
+                },
+              }}
+            >
+            {user.username}
+            </Link>
+          </StyledText>
         </View>
         <StyledText weight="bold">{gethoursAndMinutes(total_seconds)}</StyledText>
       </View>
