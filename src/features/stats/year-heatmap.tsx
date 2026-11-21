@@ -1,13 +1,12 @@
 import Alert from "@/components/alert";
+import StyledCard from "@/components/ui/card";
+import StyledText from "@/components/ui/text";
 import { useState } from "react";
 import { ScrollView } from "react-native";
 import { SvgUri } from "react-native-svg";
-import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
-import StyledCard from "@/components/ui/card";
-import StyledText from "@/components/ui/text";
 import { useStatsCtx } from "./context/statsCtxProvider";
 
-export default function YearHeatMap() {
+export default function YearHeatMap({ labels }: { labels?: boolean }) {
   const { username } = useStatsCtx()
   const [error, setError] = useState<string | null>(null)
 
@@ -21,9 +20,9 @@ export default function YearHeatMap() {
           <ScrollView
             horizontal>
             <SvgUri
-              width={1000}
+              width={700}
               height={150}
-              uri={`https://heatmap.shymike.dev/?id=${username}`}
+              uri={`https://heatmap.shymike.dev/?id=${username}&year=current&labels=${labels ? labels : false}`}
               onError={(e) => setError(`${e}`)}
             />
           </ScrollView>

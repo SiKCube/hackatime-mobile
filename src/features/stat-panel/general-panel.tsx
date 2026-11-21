@@ -63,7 +63,7 @@ export default function GeneralPanel() {
           start_date={startDate}
           end_date={endDate}
         />
-        <YearHeatMap />
+        <YearHeatMap labels />
         <View style={{ height: 100 }} />
       </ScrollView>
     </SafeAreaView>
