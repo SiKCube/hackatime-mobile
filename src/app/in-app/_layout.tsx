@@ -1,4 +1,3 @@
-import StatsCtxProvider from "@/features/stats/context/statsCtxProvider";
 import { useTheme } from "@/features/theme/context/theme-ctx-provider";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";

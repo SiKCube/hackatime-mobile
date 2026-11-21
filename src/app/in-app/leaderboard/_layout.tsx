@@ -1,5 +1,5 @@
 import { useTheme } from "@/features/theme/context/theme-ctx-provider";
-import { Stack } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 
 export default function ProjectsLayout() {
   const { themeData } = useTheme()
@@ -14,7 +14,7 @@ export default function ProjectsLayout() {
       }
     }}>
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="[username]" options={{ headerTitle: "Details", headerTintColor: themeData.surface_content, headerTitleStyle: {
+      <Stack.Screen name="[username]" options={{ headerTintColor: themeData.surface_content, headerTitleStyle: {
         fontWeight: "bold"
       } }} />
     </Stack>

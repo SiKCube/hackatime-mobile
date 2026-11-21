@@ -4,8 +4,6 @@ import StyledCard from "@/components/ui/card";
 import StyledText from "@/components/ui/text";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
-import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
-import { useTheme } from "../theme/context/theme-ctx-provider";
 import { useStatsCtx } from "./context/statsCtxProvider";
 import { gethoursAndMinutes, getStats } from "./get-stats";
 
@@ -35,14 +33,13 @@ const getDaysBetweenDates = (startDate: Date, endDate: Date): number => {
 }
 
 export default function AvarageCoding({ start_date, end_date }: Props) {
-  const { user, userApikey } = useAuthCtx()
-  const { projects, includeIA, selectedPeriodName } = useStatsCtx()
+  const { projects, includeIA, selectedPeriodName, username, userApikey } = useStatsCtx()
 
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const [chartData, setChartData] = useState<ChartData | null>(null)
 
-  const getAvarage = async (username: string, apikey: string) => {
+  const getAvarage = async (username: string, apikey: string | null) => {
     try {
       setLoading(true)
       setError(null)
@@ -68,14 +65,14 @@ export default function AvarageCoding({ start_date, end_date }: Props) {
   }
 
   useEffect(() => {
-    if (user && userApikey) {
-      getAvarage(user.username, userApikey)
+    if (username) {
+      getAvarage(username, userApikey)
     }
   }, [])
 
   useEffect(() => {
-    if (user && userApikey) {
-      getAvarage(user.username, userApikey)
+    if (username) {
+      getAvarage(username, userApikey)
     }
   }, [start_date, end_date, projects, includeIA])
 

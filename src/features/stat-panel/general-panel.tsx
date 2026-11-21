@@ -12,7 +12,6 @@ import WeeklyProjectsTimeline from "../stats/projects-timeline/weekly-projects-t
 import RhythmChart from "../stats/rhythm"
 import TopList from "../stats/top-cards/top-list"
 import YearHeatMap from "../stats/year-heatmap"
-import { useState } from "react"
 import { useTheme } from "../theme/context/theme-ctx-provider"
 
 export default function GeneralPanel() {

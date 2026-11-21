@@ -18,8 +18,8 @@ export default function BoardItem({ rank, user, total_seconds }: Entries) {
             href={{
               pathname: "/in-app/leaderboard/[username]",
               params: {
-                username: user.username,
-              }
+                username: `${user.id}|${user.username}|${user.avatar_url}`,
+              },
             }}
           >
             <Image

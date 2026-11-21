@@ -50,11 +50,10 @@ export default function RhythmChart({ start_date, end_date }: Props) {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
 
-  const { user, userApikey } = useAuthCtx()
-  const { projects } = useStatsCtx()
+  const { projects, username, userApikey } = useStatsCtx()
   const { themeData } = useTheme()
 
-  const getSpans = async (username: string, apikey: string) => {
+  const getSpans = async (username: string, apikey: string | null) => {
     try {
       setLoading(true)
       setError(null)
@@ -107,15 +106,15 @@ export default function RhythmChart({ start_date, end_date }: Props) {
   }
 
   useEffect(() => {
-    if (user && userApikey) {
-      getSpans(user.username, userApikey)
+    if (username) {
+      getSpans(username, userApikey)
     }
   }, [])
 
   useEffect(() => {
-    if (user && userApikey) {
+    if (username) {
       setSelectedHour(null)
-      getSpans(user.username, userApikey)
+      getSpans(username, userApikey)
     }
   }, [start_date, end_date])
 

@@ -5,7 +5,6 @@ import StyledText from "@/components/ui/text";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { ProgressRing } from "react-native-chart-kit/v2";
-import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
 import { useTheme } from "../theme/context/theme-ctx-provider";
 import { useStatsCtx } from "./context/statsCtxProvider";
 import { getFirstDateOfTheWeekByISOString } from "./date-picker";
@@ -30,15 +29,14 @@ interface ChartData {
 
 
 export default function CodingTimeTodayChart() {
-  const { user, userApikey } = useAuthCtx()
-  const { projects, includeIA } = useStatsCtx()
+  const { projects, includeIA, username, userApikey } = useStatsCtx()
   const { themeData } = useTheme()
 
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const [chartData, setChartData] = useState<ChartData | null>(null)
 
-  const getLast8days = async (username: string, apikey: string) => {
+  const getLast8days = async (username: string, apikey: string | null) => {
     try {
       setLoading(true)
       setError(null)
@@ -84,14 +82,14 @@ export default function CodingTimeTodayChart() {
   }
 
   useEffect(() => {
-    if (user && userApikey) {
-      getLast8days(user.username, userApikey)
+    if (username) {
+      getLast8days(username, userApikey)
     }
   }, [])
 
   useEffect(() => {
-    if (user && userApikey) {
-      getLast8days(user.username, userApikey)
+    if (username) {
+      getLast8days(username, userApikey)
     }
   }, [projects, includeIA])
 

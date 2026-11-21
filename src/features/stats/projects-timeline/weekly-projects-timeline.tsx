@@ -11,6 +11,7 @@ import { getWeeklyStats } from "./getWeeklyStats";
 import type { StatWithWeekNum } from "../stats";
 import axios from "axios";
 import Alert from "@/components/alert";
+import { useStatsCtx } from "../context/statsCtxProvider";
 
 const filterChartData = (weeklyStats: StatWithWeekNum[]) => {
   let chartData: Record<string, number | string>[] = []
@@ -31,7 +32,7 @@ const filterChartData = (weeklyStats: StatWithWeekNum[]) => {
   return chartData
 }
 
-const getProjectsNames = async (username: string, apikey: string, start_date: Date, end_date: Date) => {
+const getProjectsNames = async (username: string, apikey: string | null, start_date: Date, end_date: Date) => {
   const { data } = await axios.request({
     method: "GET",
     url: `https://hackatime.hackclub.com/api/v1/users/${username}/projects`,
@@ -58,15 +59,15 @@ interface Props {
 }
 
 export default function WeeklyProjectsTimeline({ startDate, endDate, projects }: Props) {
-  const { user, userApikey } = useAuthCtx()
-
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
 
   const [weeklyStats, setWeeklyStats] = useState<StatWithWeekNum[] | null>(null)
   const [projectsNames, setProjectsNames] = useState<string[] | null>(null)
 
-  const getWeekly = async (username: string, apikey: string, startDate: Date, endDate: Date) => {
+  const {username, userApikey} = useStatsCtx()
+
+  const getWeekly = async (username: string, apikey: string | null, startDate: Date, endDate: Date) => {
     try {
       setLoading(true)
       setError(null)
@@ -84,14 +85,14 @@ export default function WeeklyProjectsTimeline({ startDate, endDate, projects }:
   }
 
   useEffect(() => {
-    if (user && userApikey) {
-      getWeekly(user.username, userApikey, startDate, endDate)
+    if (username) {
+      getWeekly(username, userApikey, startDate, endDate)
     }
   }, [])
 
   useEffect(() => {
-    if (user && userApikey) {
-      getWeekly(user.username, userApikey, startDate, endDate)
+    if (username) {
+      getWeekly(username, userApikey, startDate, endDate)
     }
   }, [startDate, endDate])
 

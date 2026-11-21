@@ -1,7 +1,7 @@
 import { getStats } from "../get-stats"
-import { Stat } from "./statsCtxProvider"
+import { type Stat } from "../stats"
 
-export async function geTodayStats(username: string, apikey: string) {
+export async function geTodayStats(username: string, apikey: string | null) {
   const x = new Date()
   const todayDate = new Date(x.getFullYear(), x.getMonth(), x.getDate(), 0, 0, 0)
   const todayEndDate = new Date(todayDate.getTime() + 23 * 60 * 60 * 1000)

@@ -21,7 +21,9 @@ interface StatsContextType {
   setSelectedPeriodName: Dispatch<SetStateAction<string>>
   includeIA: boolean
   setIncludeIA: Dispatch<SetStateAction<boolean>>,
-  loadStats: () => Promise<void>
+  loadStats: () => Promise<void>,
+  username: string | null,
+  userApikey: string | null
 }
 
 const STARTER_VALUES: StatsContextType = {
@@ -41,13 +43,21 @@ const STARTER_VALUES: StatsContextType = {
   setSelectedPeriodName: () => { },
   includeIA: true,
   setIncludeIA: () => { },
-  loadStats: async () => { }
+  loadStats: async () => { },
+  // config
+  username: null,
+  userApikey: null
 }
 
 const StatsContext = createContext<StatsContextType>(STARTER_VALUES)
 
+interface Props {
+  children: React.ReactNode
+  username: string | null
+  userApikey: string | null
+}
 
-export default function StatsCtxProvider({ children }: { children: React.ReactNode }) {
+export default function StatsCtxProvider({ children, username, userApikey }: Props) {
   // log states
   const [error, setError] = useState<string | null>(STARTER_VALUES.error)
   const [loading, setloading] = useState<boolean>(false)
@@ -64,11 +74,8 @@ export default function StatsCtxProvider({ children }: { children: React.ReactNo
   const [selectedPeriod, setSelectedPeriod] = useState<string>(STARTER_VALUES.selectedPeriod)
   const [selectedPeriodName, setSelectedPeriodName] = useState<string>(STARTER_VALUES.selectedPeriodName)
 
-  // require data
-  const { user, userApikey } = useAuthCtx()
-
   const getCtxStats = async (
-    username: string, apikey: string,
+    username: string, apikey: string | null,
     startDate: Date, endDate: Date,
     selectedProjects: string[],
     selectedIncludeIA: boolean
@@ -104,8 +111,8 @@ export default function StatsCtxProvider({ children }: { children: React.ReactNo
   }, [startDate, endDate, projects, includeIA])
 
   const loadStats = async () => {
-    if (user && userApikey) {
-      await getCtxStats(user.username, userApikey, startDate, endDate, projects, includeIA)
+    if (username) {
+      await getCtxStats(username, userApikey, startDate, endDate, projects, includeIA)
     }
   }
 
@@ -119,7 +126,10 @@ export default function StatsCtxProvider({ children }: { children: React.ReactNo
       selectedPeriodName, setSelectedPeriodName,
       projects, setProjects,
       includeIA, setIncludeIA,
-      loadStats
+      loadStats,
+      // config
+      username,
+      userApikey
     }}>
       {children}
     </StatsContext.Provider>

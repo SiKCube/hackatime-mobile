@@ -20,7 +20,7 @@ interface BarData {
 }
 
 const getTotalSecs = async (
-  username: string, apikey: string,
+  username: string, apikey: string | null,
   noia: boolean, projects: string[],
   startDate: Date, endDate: Date
 ): Promise<number> => {
@@ -49,15 +49,14 @@ interface Props {
 }
 
 export default function IaVsHumanChart({ start_date, end_date }: Props) {
-  const { user, userApikey } = useAuthCtx()
   const { themeData } = useTheme()
-  const { projects, includeIA } = useStatsCtx()
+  const { projects, includeIA, username, userApikey } = useStatsCtx()
 
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const [chartData, setChartData] = useState<[BarData, BarData] | null>(null)
 
-  const getStat = async (username: string, apikey: string, selectedProjects: string[], selectedIncludeIA: boolean) => {
+  const getStat = async (username: string, apikey: string | null, selectedProjects: string[], selectedIncludeIA: boolean) => {
     try {
       setLoading(true)
       setError(null)
@@ -94,14 +93,14 @@ export default function IaVsHumanChart({ start_date, end_date }: Props) {
   }
 
   useEffect(() => {
-    if (userApikey && user) {
-      getStat(user.username, userApikey, projects, includeIA)
+    if (username) {
+      getStat(username, userApikey, projects, includeIA)
     }
   }, [])
 
   useEffect(() => {
-    if (userApikey && user) {
-      getStat(user.username, userApikey, projects, includeIA)
+    if (username) {
+      getStat(username, userApikey, projects, includeIA)
     }
   }, [start_date, end_date, projects, includeIA])
 

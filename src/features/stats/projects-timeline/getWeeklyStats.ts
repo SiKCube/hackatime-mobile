@@ -56,7 +56,7 @@ const getweeklist = (startDate: Date, endDate: Date) => {
 
 const stats = async (
   username: string,
-  apikey: string,
+  apikey: string | null,
   startDate: string, endDate: string,
   weekNum: number
 ): Promise<StatWithWeekNum> => {
@@ -96,7 +96,7 @@ const stats = async (
 
 export async function getWeeklyStats(
   startDate: Date, endDate: Date,
-  username: string, apikey: string,
+  username: string, apikey: string | null,
 ): Promise<StatWithWeekNum[]> {
   const weekList = getweeklist(startDate, endDate)
 

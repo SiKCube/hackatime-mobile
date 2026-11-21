@@ -3,7 +3,7 @@ import { Stat } from "../stats"
 
 export async function getTotalStats(
   startDate: Date, endDate: Date,
-  username: string, apikey: string,
+  username: string, apikey: string | null,
   projects: string[],
   includeIA: boolean = true
 ) {

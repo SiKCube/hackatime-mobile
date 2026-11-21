@@ -5,9 +5,10 @@ import { SvgUri } from "react-native-svg";
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider";
 import StyledCard from "@/components/ui/card";
 import StyledText from "@/components/ui/text";
+import { useStatsCtx } from "./context/statsCtxProvider";
 
 export default function YearHeatMap() {
-  const { user } = useAuthCtx()
+  const { username } = useStatsCtx()
   const [error, setError] = useState<string | null>(null)
 
   return (
@@ -22,7 +23,7 @@ export default function YearHeatMap() {
             <SvgUri
               width={1000}
               height={150}
-              uri={`https://heatmap.shymike.dev/?id=${user?.id}&timezone=America/La_Paz`}
+              uri={`https://heatmap.shymike.dev/?id=${username}`}
               onError={(e) => setError(`${e}`)}
             />
           </ScrollView>

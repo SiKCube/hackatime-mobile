@@ -61,7 +61,7 @@ export interface Languages {
   color: string;
 }
 
-export async function getStats(username: string, apikey: string, params: UserStatsParams): Promise<StatsRequest> {
+export async function getStats(username: string, apikey: string | null, params: UserStatsParams): Promise<StatsRequest> {
   const { data, status } = await axios.request({
     method: 'GET',
     url: `https://hackatime.hackclub.com/api/v1/users/${username}/stats`,
