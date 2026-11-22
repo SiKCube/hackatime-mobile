@@ -1,49 +1,40 @@
 import StyledCard from "@/components/ui/card";
 import StyledText from "@/components/ui/text";
 import { Image } from "expo-image";
-import { View } from "react-native";
-import { Link } from "expo-router";
+import { useRouter } from "expo-router";
+import { TouchableOpacity, View } from "react-native";
 import { gethoursAndMinutes } from "../stats/get-stats";
 import { Entries } from "./types";
 
 export default function BoardItem({ rank, user, total_seconds }: Entries) {
+  const router = useRouter()
+
   return (
-    <StyledCard important={rank <= 3}>
-      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-        <View
-          style={{ flexDirection: "row", justifyContent: "space-between", gap: 7, alignItems: "center" }}
-        >
-          <StyledText type="primary" weight="bold" size={20}>{rank}</StyledText>
-          <Link
-            href={{
-              pathname: "/in-app/leaderboard/[username]",
-              params: {
-                username: `${user.id}|${user.username}|${user.avatar_url}`,
-              },
-            }}
+    <TouchableOpacity onPress={() => router.push({
+      pathname: "/in-app/leaderboard/[username]",
+      params: {
+        username: `${user.id}|${user.username}|${user.avatar_url}`,
+      }
+    })}>
+      <StyledCard important={rank <= 3}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between", gap: 7, alignItems: "center" }}
           >
+            <StyledText type="primary" weight="bold" size={20}>{rank}</StyledText>
             <Image
               style={{ width: 30, height: 30, borderRadius: 100 }}
               source={{
                 uri: user.avatar_url,
               }}
             />
-          </Link>
-          <StyledText weight="bold">
-            <Link
-              href={{
-                pathname: "/in-app/leaderboard/[username]",
-                params: {
-                  username: `${user.id}|${user.username}|${user.avatar_url}`,
-                },
-              }}
-            >
-            {user.username}
-            </Link>
-          </StyledText>
+            <StyledText weight="bold">
+              {user.username}
+            </StyledText>
+          </View>
+          <StyledText weight="bold">{gethoursAndMinutes(total_seconds)}</StyledText>
         </View>
-        <StyledText weight="bold">{gethoursAndMinutes(total_seconds)}</StyledText>
-      </View>
-    </StyledCard>
+      </StyledCard>
+    </TouchableOpacity>
   )
 }
