@@ -7,6 +7,7 @@ import { Image } from "expo-image"
 import { View } from "react-native"
 import { useAuthCtx } from "../auth-ctx/auth-ctx-provider"
 import LoadingSpinner from "@/components/loading-spinner"
+import Appi18n from "@/i18n/i18n"
 
 export default function LoginCard() {
   const { startLogin, loading, error } = useAuthCtx()
@@ -26,14 +27,17 @@ export default function LoginCard() {
               source={require("@/assets/hackatime-mobile.png")}
               style={{ width: 200, height: 200 }}
             />
-            <StyledText textAling="center" weight="bold" size={20}>Welcome to <StyledText weight="bold" size={20} type="primary">Hackatime Mobile</StyledText></StyledText>
+            <StyledText textAling="center" weight="bold" size={20}>{Appi18n.t("main.welcome")}
+              <StyledText weight="bold" size={20} type="primary"> Hackatime Mobile</StyledText>
+            </StyledText>
           </View>
           <View style={{ gap: 20 }}>
             <StyledText type="seconday">
-              Start by logging in with your <StyledTextLink href={"https://hackatime.hackclub.com/"} type="primary">Hackatime account</StyledTextLink>.
+              {Appi18n.t("main.start-by")}
+              <StyledTextLink href={"https://hackatime.hackclub.com/"} type="primary"> {Appi18n.t("main.link-to-hackatime")}</StyledTextLink>.
             </StyledText>
             <StyledButton
-              text={loading ? "Logging In..." : "Log In"}
+              text={loading ? Appi18n.t("loading") : Appi18n.t("login")}
               type="primary"
               onClick={startLogin}
               disable={loading}

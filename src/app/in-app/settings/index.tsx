@@ -7,6 +7,9 @@ import { useRouter } from "expo-router";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import Appi18n from "@/i18n/i18n";
+import { getLocales } from "expo-localization";
+
 export default function Settings() {
   const { push } = useRouter()
   const { themeData, theme } = useTheme()
@@ -15,9 +18,9 @@ export default function Settings() {
     <SafeAreaView>
       <ScrollView contentContainerStyle={{ gap: 20, padding: 20 }}>
         <StyledText weight="bold" size={20}><StyledText weight="bold" type="primary" size={20}>Your</StyledText> Settings</StyledText>
-        
+
         <ProfileCard />
-        
+
         <TouchableOpacity onPress={() => push({
           pathname: "/in-app/settings/theme"
         })}>
@@ -30,6 +33,9 @@ export default function Settings() {
             <StyledText type="seconday">Current theme: <StyledText weight="bold" type="primary">{theme}</StyledText></StyledText>
           </StyledCard>
         </TouchableOpacity>
+
+        <StyledText>Current locate: {Appi18n.locale}</StyledText>
+        <StyledText>Device locate: {getLocales()[0].languageCode}</StyledText>
       </ScrollView>
     </SafeAreaView>
   )

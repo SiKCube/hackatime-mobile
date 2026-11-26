@@ -1,0 +1,11 @@
+{
+  "name": "English",
+  "nativeName": "English",
+  "main": {
+    "welcome": "Welcome to",
+    "start-by": "Start by logging in with",
+    "link-to-hackatime": "Hackatime account"
+  },
+  "loading": "Loading",
+  "login": "Login"
+}

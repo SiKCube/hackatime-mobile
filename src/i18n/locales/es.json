@@ -1,0 +1,11 @@
+{
+  "name": "Spanish",
+  "nativeName": "Espanol",
+  "main": {
+    "welcome": "Bienvenido a",
+    "start-by": "Empieza por inciar sesion con tu",
+    "link-to-hackatime": "cuenta de Hackatime"
+  },
+  "loading": "Cargando",
+  "login": "Iniciar sesion"
+}
