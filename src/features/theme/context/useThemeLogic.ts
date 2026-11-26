@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { CartesianChartPresetInput, createChartPreset } from "react-native-chart-kit/v2";
-import { STORE_KEYS } from "../../../../consts";
 import { getStoredData, storeData } from "../../storage";
 import { Theme, ThemeName } from "./theme";
 import THEMES from "./themes.json";
@@ -72,12 +71,12 @@ export function useThemeLogic() {
   }
 
   const storeThemeState = async () => {
-    await storeData(STORE_KEYS.theme, theme)
+    await storeData("theme", theme)
   }
 
   useEffect(() => {
     (async () => {
-      const storedTheme = await getStoredData(STORE_KEYS.theme) as ThemeName | null
+      const storedTheme = await getStoredData("theme") as ThemeName | null
 
       setTheme(storedTheme ? storedTheme : "classic")
       setThemeData(storedTheme ? THEMES[theme] : THEMES["classic"])

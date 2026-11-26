@@ -1,5 +1,10 @@
 import * as SecureStore from "expo-secure-store"
-import { SECURE_KEYS_TYPE, SECURES_KEYS,  } from "../../../consts"
+
+export type SECURE_KEYS_TYPE = "apikey" | "oauth-token"
+const SECURES_KEYS: SECURE_KEYS_TYPE[] = [
+  "apikey",
+  "oauth-token",
+]
 
 export async function saveSecure(item: SECURE_KEYS_TYPE, secureValue: string, ) {
   try {

@@ -7,7 +7,6 @@ import {
   scheduleNotificationAsync
 } from "expo-notifications";
 import { useEffect, useState } from "react";
-import { STORE_KEYS } from "../../../../consts";
 import { getStoredData, storeData } from "../../storage";
 import type { Noti } from "./types";
 
@@ -84,7 +83,7 @@ export function useReminderLogic() {
 
   const printAllNotis = async () => {
     const notis = await getAllScheduledNotificationsAsync()
-    const storedNotis = await getStoredData(STORE_KEYS.notis)
+    const storedNotis = await getStoredData("notis")
     console.log(storedNotis)
 
     notis.map((noti, i) => {
@@ -95,18 +94,18 @@ export function useReminderLogic() {
   const killAllNotis = async () => {
     if (permission) {
       await cancelAllScheduledNotificationsAsync()
-      await storeData(STORE_KEYS.notis, "[]")
+      await storeData("notis", "[]")
       setNotis([])
     }
   }
 
   const storeNotiState = async () => {
-    await storeData(STORE_KEYS.notis, JSON.stringify(notis))
+    await storeData("notis", JSON.stringify(notis))
   }
 
   useEffect(() => {
     (async () => {
-      const storednotis = await getStoredData(STORE_KEYS.notis)
+      const storednotis = await getStoredData("notis")
       const permission = await requestPermissionsAsync()
 
       setPermission(permission.granted)

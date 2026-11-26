@@ -2,7 +2,6 @@ import axios from "axios";
 import { DiscoveryDocument, exchangeCodeAsync, makeRedirectUri, ResponseType, revokeAsync, useAuthRequest } from "expo-auth-session";
 import { router } from "expo-router";
 import { createContext, useContext, useEffect, useState } from "react";
-import { STORE_KEYS } from "../../../consts";
 import { getStoredData, killAllStoredData, storeData } from "../storage";
 import { getSecure, killSecures, saveSecure } from "./secure-save";
 
@@ -128,7 +127,7 @@ export default function AuthContextProvider({ children }: { children: React.Reac
 
         const storedUserToken = await getSecure("oauth-token")
         const storedUserApikey = await getSecure("apikey")
-        const usermetadata = await getStoredData(STORE_KEYS.usermetadata)
+        const usermetadata = await getStoredData("usermetadata")
 
         if (usermetadata && storedUserApikey && storedUserToken) {
           const parseUserMetadata: UserMetadata = JSON.parse(usermetadata)
