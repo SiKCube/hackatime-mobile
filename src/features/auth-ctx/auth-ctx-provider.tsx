@@ -1,10 +1,10 @@
 import axios from "axios";
-import { makeRedirectUri, ResponseType, revokeAsync, useAuthRequest } from "expo-auth-session";
+import { DiscoveryDocument, exchangeCodeAsync, makeRedirectUri, ResponseType, revokeAsync, useAuthRequest } from "expo-auth-session";
+import { router } from "expo-router";
 import { createContext, useContext, useEffect, useState } from "react";
+import { STORE_KEYS } from "../../../consts";
 import { getStoredData, killAllStoredData, storeData } from "../storage";
 import { getSecure, killSecures, saveSecure } from "./secure-save";
-import { router } from "expo-router"
-import { APP_UUID, STORE_KEYS } from "../../../consts";
 
 interface AuthContextType {
   userToken: string | null,
@@ -38,34 +38,19 @@ const AuthContext = createContext<AuthContextType>({
   logout: () => { }
 })
 
+if (!process.env.EXPO_PUBLIC_CLIENT_UID) throw Error("EXPO_PUBLIC_CLIENT_UID not found")
+const APP_UUID = process.env.EXPO_PUBLIC_CLIENT_UID
+if (!process.env.EXPO_PUBLIC_REDIRECT_URI) throw Error("EXPO_PUBLIC_REDIRECT_URI not found")
+const REDIRECT_URI = process.env.EXPO_PUBLIC_REDIRECT_URI
+
 const AUTH_URL = "https://hackatime.hackclub.com/oauth/authorize"
 const OAUTH_REVOKE_URL = "https://hackatime.hackclub.com/oauth/revoke"
 const OAUTH_TOKEN_URL = "https://hackatime.hackclub.com/oauth/token"
 
-const DISCOVERY = {
+const DISCOVERY: DiscoveryDocument = {
   authorizationEndpoint: AUTH_URL,
   revocationEndpoint: OAUTH_REVOKE_URL,
-}
-
-const getOauthToken = async (codeSend: string) => {
-  const { data, status } = await axios.request({
-    method: 'POST',
-    url: OAUTH_TOKEN_URL,
-    params: {
-      client_id: APP_UUID,
-      code: codeSend,
-      grant_type: 'authorization_code',
-      redirect_uri: 'hackatimemobile://'
-    },
-  })
-
-  if (status !== 200) throw Error(`Can't get access token, error code: ${status}`)
-
-  const oauthToken: string = data.access_token
-
-  if (!oauthToken) throw Error("Access token not found")
-
-  return oauthToken
+  tokenEndpoint: OAUTH_TOKEN_URL,
 }
 
 const getApikey = async (oauthToken: string) => {
@@ -131,7 +116,7 @@ export default function AuthContextProvider({ children }: { children: React.Reac
     clientId: APP_UUID,
     redirectUri: makeRedirectUri(),
     responseType: ResponseType.Code,
-    scopes: ["profile",],
+    scopes: ["profile", "read"],
   }, DISCOVERY)
 
   // init
@@ -173,12 +158,24 @@ export default function AuthContextProvider({ children }: { children: React.Reac
 
   // auth handler
   useEffect(() => {
-    const fetchTokens = async (codeSend: string) => {
+    const fetchTokens = async (codeSend: string, codeVerifier: string) => {
       try {
         setLoading(true)
         setError(null)
 
-        const oauthToken = await getOauthToken(codeSend)
+        const tokenResponse = await exchangeCodeAsync(
+          {
+            clientId: APP_UUID,
+            code: codeSend,
+            redirectUri: REDIRECT_URI,
+            extraParams: {
+              code_verifier: codeVerifier,
+            },
+          },
+          DISCOVERY
+        );
+
+        const oauthToken = tokenResponse.accessToken
 
         const apikey = await getApikey(oauthToken)
 
@@ -203,7 +200,10 @@ export default function AuthContextProvider({ children }: { children: React.Reac
 
     if (response && response.type === "success" && !userToken && !userApikey) {
       const code = response.params.code
-      fetchTokens(code)
+      const codeVerifier = request?.codeVerifier
+
+      if (codeVerifier) { fetchTokens(code, codeVerifier); return }
+      setError("No code challenge found")
     } else if (response && (response.type === "cancel" || response.type === "dismiss")) {
       setError(`You ${response.type} the autentication`)
     } else if (response && response.type === "error") {
@@ -222,7 +222,7 @@ export default function AuthContextProvider({ children }: { children: React.Reac
         const success = await revokeAsync({
           clientId: APP_UUID,
           token: userToken,
-          scopes: ["profile"],
+          scopes: ["profile", "read"],
         }, DISCOVERY)
 
         if (!success) {
