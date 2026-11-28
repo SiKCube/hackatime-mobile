@@ -5,10 +5,8 @@
 
 <p align="center">An <b>android app</b> that uses <b>OAuth</b> to get your hackatime data and present it like the original hackatime but on your phone!</p>
 
-> This project has a [devlog](./DEVLOG.md)
-
 ## Download and Features
-Look at the [lastest release](https://github.com/SiKCube/hackatime-mobile/releases/tag/v1.0) to download, curently the most recent version is: `1.0`
+Look at the [latest release](https://github.com/SiKCube/hackatime-mobile/releases/latest) to download.
 
 
 ### Login with OAuth
@@ -50,7 +48,7 @@ Like the original hackatime projects tab. You can see a resume of each project, 
 </div>
 
 ### Leaderboard
-Yo can see a weekly and a daily leaderboard. And search in it.
+You can see a weekly and a daily leaderboard. And search in it.
 Also you can see others stats by clicking. All in the App.
 <div align="center">
 <img width="175" alt="Hackatime Mobile Leaderboard" src="./images/hackatime-leaderboard.jpg" />
