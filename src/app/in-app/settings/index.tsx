@@ -7,8 +7,8 @@ import { useRouter } from "expo-router";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import Appi18n from "@/i18n/i18n";
-import { getLocales } from "expo-localization";
+// import Appi18n from "@/i18n/i18n";
+// import { getLocales } from "expo-localization";
 
 export default function Settings() {
   const { push } = useRouter()
@@ -34,8 +34,8 @@ export default function Settings() {
           </StyledCard>
         </TouchableOpacity>
 
-        <StyledText>Current locate: {Appi18n.locale}</StyledText>
-        <StyledText>Device locate: {getLocales()[0].languageCode}</StyledText>
+        {/* <StyledText>Current locate: {Appi18n.locale}</StyledText>
+        <StyledText>Device locate: {getLocales()[0].languageCode}</StyledText> */}
       </ScrollView>
     </SafeAreaView>
   )
