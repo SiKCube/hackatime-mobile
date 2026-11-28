@@ -49,6 +49,15 @@ Like the original hackatime projects tab. You can see a resume of each project, 
 <img width="175" alt="Hackatime Mobile Project details" src="./images/hackatime-project-details.jpg" />
 </div>
 
+### Leaderboard
+Yo can see a weekly and a daily leaderboard. And search in it.
+Also you can see others stats by clicking. All in the App.
+<div align="center">
+<img width="175" alt="Hackatime Mobile Leaderboard" src="./images/hackatime-leaderboard.jpg" />
+<img width="175" alt="Hackatime Mobile Profile stats" src="./images/hackatime-other-stats.jpg" />
+</div>
+
+
 ### Reminders
 Using `expo-notifications`, you can select an hour, amount of time, which weekdays and for what projects will you reminder appear. This includes a goal progress card.
 
